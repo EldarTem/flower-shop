@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Цветочная подписка — Roses from Edem</title>
+
+    <link rel="stylesheet" href="assets/css/base.css" />
+    <link rel="stylesheet" href="assets/css/style.css" />
+    <link
+      rel="icon"
+      href="/assets/images/icons/favicon.svg"
+      type="image/svg+xml"
+    />
+  </head>
+  <body>
+    <!-- header -->
+    <div id="header-placeholder"></div>
+
+    <main class="container subscription">
+      <h1 class="subscription__title">ЦВЕТОЧНАЯ ПОДПИСКА</h1>
+
+      <!-- Пиллы-навигации -->
+      <nav class="subs-nav" aria-label="Типы подписки">
+        <a class="chip is-active" href="#home">Для дома</a>
+        <a class="chip" href="#office">Для офиса</a>
+        <a class="chip" href="#gift">В подарок</a>
+      </nav>
+
+      <!-- Блок 1 — Для дома -->
+      <section id="home" class="sub-block">
+        <h2 class="sub-block__title">Для дома</h2>
+
+        <div class="sub-block__grid">
+          <figure class="sub-block__media">
+            <img
+              src="assets/images/subscription/home.jpg"
+              alt="Подписка: букет для дома"
+            />
+          </figure>
+
+          <div class="sub-block__content">
+            <p>
+              Цветочная подписка — это удобный сервис регулярной доставки
+              букетов из свежих сезонных цветов прямо к вам домой в течение
+              месяца (4 недели).
+            </p>
+            <p>
+              Эта подписка идеально подойдёт тем, кто хочет наслаждаться
+              красотой и свежестью цветов на протяжении всего месяца, создать
+              уютную атмосферу дома или добавить яркие акценты в пространство.
+            </p>
+            <p>
+              Мы предложим вам только свежие цветы, учитывая ваши предпочтения и
+              выбранные цветовой гаммы и сортов, чтобы каждую неделю вы
+              радовались новой уникальной композиции. Вы также можете сообщить
+              время, место, адрес доставки, чтобы сделать получение максимально
+              удобным.
+            </p>
+            <p>
+              Для расчёта стоимости подписки, оставьте свои данные, и наш
+              администратор свяжется с вами в ближайшее время для обсуждения
+              всех деталей.
+            </p>
+
+            <form class="sub-form" action="#" method="post">
+              <input
+                class="pill-input"
+                type="text"
+                name="name"
+                placeholder="Ваше имя"
+                required
+              />
+              <input
+                class="pill-input"
+                type="tel"
+                name="phone"
+                placeholder="Телефон"
+                required
+              />
+              <button class="btn btn--primary btn--xl" type="submit">
+                Заказать
+              </button>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <!-- Блок 2 — Для офиса (картинка справа) -->
+      <section id="office" class="sub-block sub-block--reverse">
+        <h2 class="sub-block__title">Для офиса</h2>
+
+        <div class="sub-block__grid">
+          <figure class="sub-block__media">
+            <img
+              src="assets/images/subscription/office.jpg"
+              alt="Подписка: букет для офиса"
+            />
+          </figure>
+
+          <div class="sub-block__content">
+            <p>
+              Подписка на офис освобождает время и экономит бюджет. Вам не нужно
+              постоянно заниматься поиском, выбором и подбором цветов.
+            </p>
+            <p>
+              Цветы по подписке всегда будут свежими, без резких перепадов
+              качества. При оформлении первого заказа вы можете выбрать тип
+              букета и периодичность доставок. Мы будем доставлять вам цветы по
+              расписанию.
+            </p>
+            <p>
+              При оформлении корпоративных подписок возможен нанесение на
+              постоянной основе нашей брендированной ленты на вазы; при больших
+              объёмах и сроках — скидки.
+            </p>
+            <form class="sub-form" action="#" method="post">
+              <input
+                class="pill-input"
+                type="text"
+                name="name"
+                placeholder="Ваше имя"
+                required
+              />
+              <input
+                class="pill-input"
+                type="tel"
+                name="phone"
+                placeholder="Телефон"
+                required
+              />
+              <button class="btn btn--primary btn--xl" type="submit">
+                Заказать
+              </button>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <!-- Блок 3 — В подарок -->
+      <section id="gift" class="sub-block">
+        <h2 class="sub-block__title">Подарочный сертификат</h2>
+
+        <div class="sub-block__grid">
+          <figure class="sub-block__media">
+            <img
+              src="assets/images/subscription/gift.jpg"
+              alt="Подарочный сертификат на цветочную подписку"
+            />
+          </figure>
+
+          <div class="sub-block__content">
+            <p>
+              <strong>Универсальный подарок</strong> — сертификат подойдёт для
+              любого повода: день рождения, юбилей, свадьба или знак внимания.
+            </p>
+            <p><strong>Как оформить сертификат?</strong></p>
+            <p>
+              1) Определите желаемую сумму сертификата от 3 000 ₽ или срок
+              подписки. <br />
+              2) Укажите данные получателя и свои пожелания. <br />
+              3) Мы подготовим красивый сертификат, который можно вручить лично
+              или отправить по почте.
+            </p>
+            <p>
+              Оставьте контакты — администратор свяжется и подберёт оптимальный
+              вариант.
+            </p>
+            <form class="sub-form" action="#" method="post">
+              <input
+                class="pill-input"
+                type="text"
+                name="name"
+                placeholder="Ваше имя"
+                required
+              />
+              <input
+                class="pill-input"
+                type="tel"
+                name="phone"
+                placeholder="Телефон"
+                required
+              />
+              <button class="btn btn--primary btn--xl" type="submit">
+                Заказать
+              </button>
+            </form>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- footer -->
+    <div id="footer-placeholder"></div>
+
+    <script src="assets/js/main.js"></script>
+    <script>
+      // Подсветка активного чипа и плавный скролл
+      (function () {
+        const chips = [...document.querySelectorAll(".subs-nav .chip")];
+        chips.forEach((chip) => {
+          chip.addEventListener("click", (e) => {
+            const id = chip.getAttribute("href");
+            const target = document.querySelector(id);
+            if (!target) return;
+            e.preventDefault();
+            target.scrollIntoView({ behavior: "smooth", block: "start" });
+            chips.forEach((c) => c.classList.remove("is-active"));
+            chip.classList.add("is-active");
+          });
+        });
+
+        // Автоподсветка при прокрутке
+        const sections = [...document.querySelectorAll(".sub-block")];
+        const io = new IntersectionObserver(
+          (entries) => {
+            const visible = entries
+              .filter((en) => en.isIntersecting)
+              .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+            if (!visible) return;
+            const id = "#" + visible.target.id;
+            chips.forEach((c) =>
+              c.classList.toggle("is-active", c.getAttribute("href") === id)
+            );
+          },
+          { threshold: [0.4, 0.6] }
+        );
+        sections.forEach((s) => io.observe(s));
+      })();
+    </script>
+  </body>
+</html>

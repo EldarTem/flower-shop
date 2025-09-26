@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pure azure — Roses from Edem</title>
+
+    <link rel="stylesheet" href="assets/css/base.css" />
+    <link rel="stylesheet" href="assets/css/style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+    />
+    <link
+      rel="icon"
+      href="/assets/images/icons/favicon.svg"
+      type="image/svg+xml"
+    />
+  </head>
+  <body>
+    <!-- header -->
+    <div id="header-placeholder"></div>
+
+    <main class="container product">
+      <div class="product__grid">
+        <!-- MEDIA -->
+        <section class="product__media" aria-label="Фотографии букета">
+          <div class="product__photo">
+            <img
+              id="product-main"
+              src="assets/images/izobr/goods_01.jpg"
+              alt="Букет Pure azure — крупный план"
+            />
+          </div>
+
+          <ul class="product__thumbs" role="list" id="product-thumbs">
+            <li>
+              <button
+                class="thumb is-active"
+                data-full="assets/images/products/pure-azure/1.jpg"
+              >
+                <img src="assets/images/izobr/goods_01.jpg" alt="Фото 1" />
+              </button>
+            </li>
+            <li>
+              <button
+                class="thumb"
+                data-full="assets/images/products/pure-azure/2.jpg"
+              >
+                <img
+                  src="assets/images/products/pure-azure/2_sm.jpg"
+                  alt="Фото 2"
+                />
+              </button>
+            </li>
+            <li>
+              <button
+                class="thumb"
+                data-full="assets/images/products/pure-azure/3.jpg"
+              >
+                <img
+                  src="assets/images/products/pure-azure/3_sm.jpg"
+                  alt="Фото 3"
+                />
+              </button>
+            </li>
+            <li>
+              <button
+                class="thumb"
+                data-full="assets/images/products/pure-azure/4.jpg"
+              >
+                <img
+                  src="assets/images/products/pure-azure/4_sm.jpg"
+                  alt="Фото 4"
+                />
+              </button>
+            </li>
+          </ul>
+        </section>
+
+        <!-- SUMMARY -->
+        <section class="product__summary">
+          <h1 class="product__title">Pure azure</h1>
+
+          <div class="product__price-row">
+            <div class="product__price">5&nbsp;000&nbsp;₽</div>
+            <a href="#" class="btn btn--primary">Заказать</a>
+          </div>
+
+          <div class="product__desc">Нежный букет собран на вкус флориста.</div>
+
+          <div class="product__section">
+            <h2 class="product__subtitle">Состав</h2>
+            <p>Кустовая роза, одноголовая хризантема, георгины, эвкалипт.</p>
+          </div>
+
+          <div class="product__section">
+            <h2 class="product__subtitle">К букету можно добавить</h2>
+            <ul class="product__list" role="list">
+              <li>открытку с пожеланием (бесплатно);</li>
+              <li>транспортировочный бокс с водой;</li>
+              <li>секатор;</li>
+              <li>вазу.</li>
+            </ul>
+          </div>
+
+          <p class="product__note">
+            Цветы могут быть сезонными или временно отсутствовать. В случае их
+            нежелания мы обсудим с вами возможную замену при подтверждении
+            заказа.
+          </p>
+        </section>
+      </div>
+      <section class="popular container">
+        <h2 class="popular__title">ПОПУЛЯРНОЕ</h2>
+        <div class="popular__slider-wrap">
+          <button class="popular-nav popular-prev" aria-label="Предыдущие">
+            <img src="assets/images/icons/arrowLeft.svg" alt="" />
+          </button>
+          <button class="popular-nav popular-next" aria-label="Следующие">
+            <img src="assets/images/icons/arrowRight.svg" alt="" />
+          </button>
+
+          <div class="swiper popular-swiper">
+            <div class="swiper-wrapper">
+              <!-- Слайды карточек (оставляю твои примеры) -->
+              <div class="swiper-slide">
+                <a href="#" class="product-card">
+                  <div class="product-card__img">
+                    <img
+                      src="assets/images/menu/person-holding-bouquet-tulips.jpg"
+                      alt="Роза кустовая, 12 шт, Голландия"
+                    />
+                  </div>
+                  <div class="product-card__title">
+                    Роза кустовая, 12 шт, Голландия
+                  </div>
+                  <div class="product-card__price">7 500 ₽</div>
+                </a>
+              </div>
+              <div class="swiper-slide">
+                <a href="#" class="product-card">
+                  <div class="product-card__img">
+                    <img
+                      src="assets/images/menu/person-holding-bouquet-tulips.jpg"
+                      alt="Роза Голландская, 150 шт"
+                    />
+                  </div>
+                  <div class="product-card__title">
+                    Роза Голландская, 150 шт
+                  </div>
+                  <div class="product-card__price">12 900 ₽</div>
+                </a>
+              </div>
+              <div class="swiper-slide">
+                <a href="#" class="product-card">
+                  <div class="product-card__img">
+                    <img
+                      src="assets/images/menu/person-holding-bouquet-tulips.jpg"
+                      alt="Роза пионовидная, кустовая, 50 шт"
+                    />
+                  </div>
+                  <div class="product-card__title">
+                    Роза пионовидная, кустовая, 50 шт
+                  </div>
+                  <div class="product-card__price">9 600 ₽</div>
+                </a>
+              </div>
+              <div class="swiper-slide">
+                <a href="#" class="product-card">
+                  <div class="product-card__img">
+                    <img
+                      src="assets/images/menu/person-holding-bouquet-tulips.jpg"
+                      alt="Хризантемы белые, 3 шт"
+                    />
+                  </div>
+                  <div class="product-card__title">Хризантемы белые, 3 шт</div>
+                  <div class="product-card__price">900 ₽</div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="popular container">
+        <h2 class="popular__title">ПОПУЛЯРНОЕ</h2>
+        <div class="popular__slider-wrap">
+          <button class="popular-nav popular-prev" aria-label="Предыдущие">
+            <img src="assets/images/icons/arrowLeft.svg" alt="" />
+          </button>
+          <button class="popular-nav popular-next" aria-label="Следующие">
+            <img src="assets/images/icons/arrowRight.svg" alt="" />
+          </button>
+
+          <div class="swiper popular-swiper">
+            <div class="swiper-wrapper">
+              <!-- Слайды карточек (оставляю твои примеры) -->
+              <div class="swiper-slide">
+                <a href="#" class="product-card">
+                  <div class="product-card__img">
+                    <img
+                      src="assets/images/menu/person-holding-bouquet-tulips.jpg"
+                      alt="Роза кустовая, 12 шт, Голландия"
+                    />
+                  </div>
+                  <div class="product-card__title">
+                    Роза кустовая, 12 шт, Голландия
+                  </div>
+                  <div class="product-card__price">7 500 ₽</div>
+                </a>
+              </div>
+              <div class="swiper-slide">
+                <a href="#" class="product-card">
+                  <div class="product-card__img">
+                    <img
+                      src="assets/images/menu/person-holding-bouquet-tulips.jpg"
+                      alt="Роза Голландская, 150 шт"
+                    />
+                  </div>
+                  <div class="product-card__title">
+                    Роза Голландская, 150 шт
+                  </div>
+                  <div class="product-card__price">12 900 ₽</div>
+                </a>
+              </div>
+              <div class="swiper-slide">
+                <a href="#" class="product-card">
+                  <div class="product-card__img">
+                    <img
+                      src="assets/images/menu/person-holding-bouquet-tulips.jpg"
+                      alt="Роза пионовидная, кустовая, 50 шт"
+                    />
+                  </div>
+                  <div class="product-card__title">
+                    Роза пионовидная, кустовая, 50 шт
+                  </div>
+                  <div class="product-card__price">9 600 ₽</div>
+                </a>
+              </div>
+              <div class="swiper-slide">
+                <a href="#" class="product-card">
+                  <div class="product-card__img">
+                    <img
+                      src="assets/images/menu/person-holding-bouquet-tulips.jpg"
+                      alt="Хризантемы белые, 3 шт"
+                    />
+                  </div>
+                  <div class="product-card__title">Хризантемы белые, 3 шт</div>
+                  <div class="product-card__price">900 ₽</div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- footer -->
+    <div id="footer-placeholder"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script src="assets/js/main.js"></script>
+  </body>
+</html>

@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Roses from Edem</title>
+
+    <!-- Стили -->
+    <link rel="stylesheet" href="assets/css/base.css" />
+    <link rel="stylesheet" href="assets/css/style.css" />
+
+    <!-- Swiper -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+    />
+    <link
+      rel="icon"
+      href="/assets/images/icons/favicon.svg"
+      type="image/svg+xml"
+    />
+  </head>
+  <body>
+    <!-- Header partial -->
+    <div id="header-placeholder"></div>
+
+    <!-- Hero Slider -->
+    <section class="hero-slider container" aria-label="Промо-баннеры">
+      <div class="swiper">
+        <div class="swiper-wrapper">
+          <div class="swiper-slide">
+            <img src="assets/images/banner/Баннер-02.jpg" alt="Букет роз №1" />
+          </div>
+          <div class="swiper-slide">
+            <img src="assets/images/banner/Баннер-03.jpg" alt="Букет роз №2" />
+          </div>
+          <div class="swiper-slide">
+            <img src="assets/images/banner/Баннер-04.jpg" alt="Букет роз №3" />
+          </div>
+        </div>
+        <div class="swiper-pagination" aria-label="Пагинация слайдера"></div>
+      </div>
+    </section>
+
+    <!-- Категории -->
+    <section class="categories container">
+      <h2 class="categories__title">КАТЕГОРИИ</h2>
+      <div class="categories__grid">
+        <a class="cat-card cat-card--hero" href="#">
+          <img src="assets/images/menu/fm1_roses2.png" alt="Букеты" />
+          <span class="cat-card__label cat-card__label--br">БУКЕТЫ</span>
+        </a>
+        <a class="cat-card cat-card--menu" href="#">
+          <img
+            src="assets/images/menu/fm3_pion_rose.png"
+            alt="Цветочное меню"
+          />
+          <span class="cat-card__label">ЦВЕТОЧНОЕ МЕНЮ</span>
+        </a>
+        <a class="cat-card cat-card--comp" href="#">
+          <img src="assets/images/izobr/goods_01.jpg" alt="Композиции" />
+          <span class="cat-card__label">КОМПОЗИЦИИ</span>
+        </a>
+        <a class="cat-card cat-card--add" href="#">
+          <img src="assets/images/izobr/cert-2-2.jpg" alt="Дополнения" />
+          <span class="cat-card__label">ДОПОЛНЕНИЯ</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- Популярное -->
+    <section class="popular container">
+      <h2 class="popular__title">ПОПУЛЯРНОЕ</h2>
+      <div class="popular__slider-wrap">
+        <button class="popular-nav popular-prev" aria-label="Предыдущие">
+          <img src="assets/images/icons/arrowLeft.svg" alt="" />
+        </button>
+        <button class="popular-nav popular-next" aria-label="Следующие">
+          <img src="assets/images/icons/arrowRight.svg" alt="" />
+        </button>
+
+        <div class="swiper popular-swiper">
+          <div class="swiper-wrapper">
+            <!-- Слайды карточек (оставляю твои примеры) -->
+            <div class="swiper-slide">
+              <a href="#" class="product-card">
+                <div class="product-card__img">
+                  <img
+                    src="assets/images/menu/person-holding-bouquet-tulips.jpg"
+                    alt="Роза кустовая, 12 шт, Голландия"
+                  />
+                </div>
+                <div class="product-card__title">
+                  Роза кустовая, 12 шт, Голландия
+                </div>
+                <div class="product-card__price">7 500 ₽</div>
+              </a>
+            </div>
+            <div class="swiper-slide">
+              <a href="#" class="product-card">
+                <div class="product-card__img">
+                  <img
+                    src="assets/images/menu/person-holding-bouquet-tulips.jpg"
+                    alt="Роза Голландская, 150 шт"
+                  />
+                </div>
+                <div class="product-card__title">Роза Голландская, 150 шт</div>
+                <div class="product-card__price">12 900 ₽</div>
+              </a>
+            </div>
+            <div class="swiper-slide">
+              <a href="#" class="product-card">
+                <div class="product-card__img">
+                  <img
+                    src="assets/images/menu/person-holding-bouquet-tulips.jpg"
+                    alt="Роза пионовидная, кустовая, 50 шт"
+                  />
+                </div>
+                <div class="product-card__title">
+                  Роза пионовидная, кустовая, 50 шт
+                </div>
+                <div class="product-card__price">9 600 ₽</div>
+              </a>
+            </div>
+            <div class="swiper-slide">
+              <a href="#" class="product-card">
+                <div class="product-card__img">
+                  <img
+                    src="assets/images/menu/person-holding-bouquet-tulips.jpg"
+                    alt="Хризантемы белые, 3 шт"
+                  />
+                </div>
+                <div class="product-card__title">Хризантемы белые, 3 шт</div>
+                <div class="product-card__price">900 ₽</div>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Нам доверяют -->
+    <section class="trust container">
+      <h2 class="trust__title">НАМ ДОВЕРЯЮТ</h2>
+      <div class="trust__grid">
+        <figure class="trust__media">
+          <img
+            src="assets/images/izobr/team.jpg"
+            alt="Наш флорист за работой"
+          />
+        </figure>
+        <div class="trust__content">
+          <ul class="trust__list" role="list">
+            <li>более 8 лет безупречной работы</li>
+            <li>более 15&nbsp;000 довольных клиентов</li>
+            <li>круглосуточная доставка по Крыму</li>
+            <li>всегда свежие цветы</li>
+            <li>выгодные цены</li>
+          </ul>
+          <a class="trust__rating" href="#" target="_blank" rel="noopener">
+            <span class="trust__rating-icon"
+              ><img src="assets/images/icons/starFilled.svg" alt=""
+            /></span>
+            <span class="trust__rating-text"
+              ><strong>4,9</strong> на Яндексе</span
+            >
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Контакты -->
+    <section class="contacts container">
+      <h2 class="contacts__title">КОНТАКТЫ</h2>
+      <div class="contacts__grid">
+        <div class="contacts__map">
+          <iframe
+            src="https://yandex.ru/map-widget/v1/?um=constructor%3A&z=17&ll=34.108,44.952"
+            frameborder="0"
+            allowfullscreen
+            loading="lazy"
+            aria-label="Карта"
+          ></iframe>
+        </div>
+        <div class="contacts__info">
+          <div class="contacts__lines">
+            <p>г. Симферополь,<br />пер. Карьерный, д.15/28а</p>
+            <p><a href="tel:+79785455455">+7 (978) 545-54-55</a></p>
+            <p>
+              <a href="mailto:rozi.from.edem@mail.ru">rozi.from.edem@mail.ru</a>
+            </p>
+            <p>Работаем ежедневно<br />с 09:00 до 00:00</p>
+          </div>
+          <div class="contacts__social">
+            <a
+              class="contacts__soc contacts__soc--ghost"
+              href="#"
+              aria-label="VK"
+              ><img src="assets/images/icons/vkIcon.svg" alt=""
+            /></a>
+            <a
+              class="contacts__soc contacts__soc--ghost"
+              href="#"
+              aria-label="Instagram"
+              ><img src="assets/images/icons/instaIcon.svg" alt=""
+            /></a>
+            <a
+              class="contacts__soc contacts__soc--circle"
+              href="#"
+              aria-label="WhatsApp"
+              ><img src="assets/images/icons/whatsappIcon.svg" alt=""
+            /></a>
+            <a
+              class="contacts__soc contacts__soc--circle"
+              href="#"
+              aria-label="Telegram"
+              ><img src="assets/images/icons/tgIcon.svg" alt=""
+            /></a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer partial -->
+    <div id="footer-placeholder"></div>
+
+    <!-- Скрипты -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script src="assets/js/main.js"></script>
+  </body>
+</html>

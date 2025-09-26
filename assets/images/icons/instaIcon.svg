@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="14.111mm"
+   height="14.111mm"
+   viewBox="0 0 14.111 14.111"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.4.2 (f4327f4, 2025-05-13)"
+   sodipodi:docname="drawing-4.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     inkscape:zoom="11.01807"
+     inkscape:cx="40.66048"
+     inkscape:cy="23.8245"
+     inkscape:window-width="1920"
+     inkscape:window-height="991"
+     inkscape:window-x="-9"
+     inkscape:window-y="-9"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs1">
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath194">
+      <path
+         d="M 0,5527.495 H 1920 V 0 H 0 Z"
+         transform="translate(-1840,-5285.6769)"
+         id="path194" />
+    </clipPath>
+  </defs>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       id="path193"
+       d="m 0,0 c 4.529,0 8.182,-3.652 8.182,-8.182 0,-4.529 -3.653,-8.182 -8.182,-8.182 -4.529,0 -8.182,3.653 -8.182,8.182 C -8.182,-3.652 -4.529,0 0,0 m 0,1.818 c -5.512,0 -10,-4.488 -10,-10 0,-5.512 4.488,-10 10,-10 5.512,0 10,4.488 10,10 0,5.512 -4.488,10 -10,10 m 10.909,2.727 c -1.004,0 -1.818,-0.814 -1.818,-1.818 0,-1.004 0.814,-1.818 1.818,-1.818 1.004,0 1.818,0.814 1.818,1.818 0,1.004 -0.814,1.818 -1.818,1.818 M -8.182,10 H 8.182 c 5.533,0 10,-4.467 10,-10 v -16.364 c 0,-5.533 -4.467,-10 -10,-10 H -8.182 c -5.533,0 -10,4.467 -10,10 V 0 c 0,5.533 4.467,10 10,10 m 0,1.818 C -14.698,11.818 -20,6.516 -20,0 v -16.364 c 0,-6.516 5.302,-11.818 11.818,-11.818 H 8.182 c 6.516,0 11.818,5.302 11.818,11.818 V 0 C 20,6.516 14.698,11.818 8.182,11.818 Z"
+       style="fill:#aeaeae icc-color(Display, 0.68199158, 0.68199158, 0.68199158);fill-opacity:1;fill-rule:nonzero;stroke:none"
+       transform="matrix(0.35277776,0,0,-0.35277776,7.0568645,4.1705964)"
+       clip-path="url(#clipPath194)" />
+  </g>
+</svg>

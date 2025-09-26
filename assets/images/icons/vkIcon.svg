@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="14.111mm"
+   height="14.111mm"
+   viewBox="0 0 14.111 14.111"
+   version="1.1"
+   id="svg1"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1">
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath198">
+      <path
+         d="M 0,5527.495 H 1920 V 0 H 0 Z"
+         transform="translate(-1778.8702,-5295.6769)"
+         id="path198" />
+    </clipPath>
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath196">
+      <path
+         d="M 0,5527.495 H 1920 V 0 H 0 Z"
+         transform="translate(-1773.3246,-5285.0602)"
+         id="path196" />
+    </clipPath>
+  </defs>
+  <g
+     id="layer1">
+    <path
+       id="path195"
+       d="m 0,0 c 0.223,-10.7 5.573,-17.13 14.954,-17.13 h 0.531 v 6.121 c 3.447,-0.343 6.054,-2.864 7.1,-6.121 h 4.87 c -1.337,4.869 -4.853,7.562 -7.048,8.59 2.195,1.269 5.282,4.356 6.019,8.54 H 22.002 C 21.041,-3.395 18.195,-6.482 15.485,-6.773 V 0 H 11.061 V -11.866 C 8.317,-11.18 4.853,-7.854 4.699,0 Z"
+       style="fill:#aeaeae icc-color(Display, 0.68199158, 0.68199158, 0.68199158);fill-opacity:1;fill-rule:evenodd;stroke:none"
+       transform="matrix(0.35277776,0,0,-0.35277776,2.2182566,4.3893456)"
+       clip-path="url(#clipPath196)" />
+    <path
+       id="path197"
+       d="m 0,0 h 16.364 c 5.533,0 10,-4.467 10,-10 v -16.364 c 0,-5.533 -4.467,-10 -10,-10 H 0 c -5.533,0 -10,4.467 -10,10 V -10 c 0,5.533 4.467,10 10,10 m 0,1.818 c -6.516,0 -11.818,-5.302 -11.818,-11.818 v -16.364 c 0,-6.516 5.302,-11.818 11.818,-11.818 h 16.364 c 6.516,0 11.818,5.302 11.818,11.818 V -10 c 0,6.516 -5.302,11.818 -11.818,11.818 z"
+       style="fill:#aeaeae icc-color(Display, 0.68199158, 0.68199158, 0.68199158);fill-opacity:1;fill-rule:nonzero;stroke:none"
+       transform="matrix(0.35277776,0,0,-0.35277776,4.1746386,0.64400963)"
+       clip-path="url(#clipPath198)" />
+  </g>
+</svg>
