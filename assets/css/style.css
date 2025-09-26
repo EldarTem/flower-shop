@@ -54,7 +54,7 @@
 .header-actions {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 30px;
 }
 
 .header-actions__cart {
@@ -80,7 +80,7 @@
 /* ---------- Social ---------- */
 .social__list {
   display: flex;
-  gap: 10px;
+  gap: 15px;
 }
 
 ul.social__list,
@@ -116,63 +116,65 @@ ul.social__list li.social__item {
   filter: invert(1);
 }
 
-/* ---------- Hero Slider ---------- */
-.hero-slider {
-  border: 2px solid var(--fg);
-  border-radius: var(--radius-md);
-  max-width: var(--container-max);
+/* ===== HERO SLIDER ===== */
+/*.hero-slider {
+  margin: 40px 0;
+}
+*/
+.hero-slider__frame {
+  border: 2px solid #fff;
+  border-radius: 12px;
+  overflow: hidden; /* ← клипает углы во время анимации */
 }
 
-/* Встраиваемые стили внутренних слайдов */
-.hero-slider .swiper-slide img {
+/* высота по макету; при желании переставь на aspect-ratio 
+.hero-swiper {
+  height: min(70vh, 740px);
+}*/
+.hero-swiper .swiper-slide {
+  display: flex;
+}
+.hero-swiper img {
   width: 100%;
+  height: 100%;
   object-fit: cover;
-  border-radius: var(--radius-md);
+  display: block;
 }
 
-/* ---------- Адаптив ---------- */
-@media (max-width: 1200px) {
-  .main-nav__list {
-    gap: 24px;
-  }
-  .main-nav__link {
-    font-size: 24px;
-  }
+/* Пагинация: ряд маленьких точек по центру снизу */
+.hero-swiper .swiper-pagination {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 18px;
+  text-align: center;
+}
+.hero-swiper .swiper-pagination-bullet {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.45);
+  opacity: 1; /* Swiper по умолчанию меняет opacity — выключаем */
+  margin: 0 6px !important;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+.hero-swiper .swiper-pagination-bullet:hover {
+  transform: scale(1.2);
+}
+.hero-swiper .swiper-pagination-bullet-active {
+  background: #fff;
+  transform: scale(1.25);
 }
 
-@media (max-width: 900px) {
-  .main-nav__bar {
-    flex-wrap: wrap;
-    row-gap: var(--space-4);
+/* Мобилка: чуть крупнее кликабельность */
+@media (max-width: 640px) {
+  .hero-swiper {
+    height: min(48vh, 420px);
   }
-  .header-actions {
-    order: 2;
-    width: 100%;
-    justify-content: flex-end;
-  }
-  .main-nav__list {
-    order: 1;
-    width: 100%;
-    justify-content: space-between;
-    gap: var(--space-4);
-  }
-  .main-nav__link {
-    font-size: 20px;
-  }
-}
-
-@media (max-width: 600px) {
-  body {
-    padding-inline: var(--space-6);
-  }
-  .main-nav__link {
-    font-size: 18px;
-    letter-spacing: 0.5px;
-  }
-  .header-actions__cart,
-  .social__link--circle {
-    width: 46px;
-    height: 46px;
+  .hero-swiper .swiper-pagination-bullet {
+    width: 9px;
+    height: 9px;
+    margin: 0 5px !important;
   }
 }
 
@@ -274,6 +276,8 @@ ul.social__list li.social__item {
     font-size: 18px;
   }
 }
+
+
 /* ===== CATEGORIES ===== */
 :root {
   --cat-h: 480px; /* единая высота карточек; при необходимости подправь */

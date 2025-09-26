@@ -8,12 +8,8 @@
     <!-- Стили -->
     <link rel="stylesheet" href="assets/css/base.css" />
     <link rel="stylesheet" href="assets/css/style.css" />
+    <link rel="stylesheet" href="assets/libs/swiper/swiper-bundle.min.css" />
 
-    <!-- Swiper -->
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
-    />
     <link
       rel="icon"
       href="/assets/images/icons/favicon.svg"
@@ -26,19 +22,22 @@
 
     <!-- Hero Slider -->
     <section class="hero-slider container" aria-label="Промо-баннеры">
-      <div class="swiper">
-        <div class="swiper-wrapper">
-          <div class="swiper-slide">
-            <img src="assets/images/banner/Баннер-02.jpg" alt="Букет роз №1" />
+      <div class="hero-slider__frame">
+        <!-- скругление и overflow тут -->
+        <div class="swiper hero-swiper">
+          <div class="swiper-wrapper">
+            <div class="swiper-slide">
+              <img src="assets/images/banner/Баннер-02.jpg" alt="" />
+            </div>
+            <div class="swiper-slide">
+              <img src="assets/images/banner/Баннер-03.jpg" alt="" />
+            </div>
+            <div class="swiper-slide">
+              <img src="assets/images/banner/Баннер-04.jpg" alt="" />
+            </div>
           </div>
-          <div class="swiper-slide">
-            <img src="assets/images/banner/Баннер-03.jpg" alt="Букет роз №2" />
-          </div>
-          <div class="swiper-slide">
-            <img src="assets/images/banner/Баннер-04.jpg" alt="Букет роз №3" />
-          </div>
+          <div class="swiper-pagination"></div>
         </div>
-        <div class="swiper-pagination" aria-label="Пагинация слайдера"></div>
       </div>
     </section>
 
@@ -46,23 +45,20 @@
     <section class="categories container">
       <h2 class="categories__title">КАТЕГОРИИ</h2>
       <div class="categories__grid">
-        <a class="cat-card cat-card--hero" href="#">
-          <img src="assets/images/menu/fm1_roses2.png" alt="Букеты" />
+        <a class="cat-card cat-card--hero" href="/bouquet-menu.html">
+          <img src="assets/images/index/image219.png" alt="Букеты" />
           <span class="cat-card__label cat-card__label--br">БУКЕТЫ</span>
         </a>
-        <a class="cat-card cat-card--menu" href="#">
-          <img
-            src="assets/images/menu/fm3_pion_rose.png"
-            alt="Цветочное меню"
-          />
+        <a class="cat-card cat-card--menu" href="/flower-menu.html">
+          <img src="assets/images/index/image38.png" alt="Цветочное меню" />
           <span class="cat-card__label">ЦВЕТОЧНОЕ МЕНЮ</span>
         </a>
-        <a class="cat-card cat-card--comp" href="#">
-          <img src="assets/images/izobr/goods_01.jpg" alt="Композиции" />
+        <a class="cat-card cat-card--comp" href="/composition-menu.html">
+          <img src="assets/images/index/image37.png" alt="Композиции" />
           <span class="cat-card__label">КОМПОЗИЦИИ</span>
         </a>
-        <a class="cat-card cat-card--add" href="#">
-          <img src="assets/images/izobr/cert-2-2.jpg" alt="Дополнения" />
+        <a class="cat-card cat-card--add" href="/addition-menu.html">
+          <img src="assets/images/index/image36.png" alt="Дополнения" />
           <span class="cat-card__label">ДОПОЛНЕНИЯ</span>
         </a>
       </div>
@@ -86,7 +82,7 @@
               <a href="#" class="product-card">
                 <div class="product-card__img">
                   <img
-                    src="assets/images/menu/person-holding-bouquet-tulips.jpg"
+                    src="assets/images/index/g140.png"
                     alt="Роза кустовая, 12 шт, Голландия"
                   />
                 </div>
@@ -100,7 +96,7 @@
               <a href="#" class="product-card">
                 <div class="product-card__img">
                   <img
-                    src="assets/images/menu/person-holding-bouquet-tulips.jpg"
+                    src="assets/images/index/g59.png"
                     alt="Роза Голландская, 150 шт"
                   />
                 </div>
@@ -112,7 +108,7 @@
               <a href="#" class="product-card">
                 <div class="product-card__img">
                   <img
-                    src="assets/images/menu/person-holding-bouquet-tulips.jpg"
+                    src="assets/images/index/g52.png"
                     alt="Роза пионовидная, кустовая, 50 шт"
                   />
                 </div>
@@ -126,7 +122,7 @@
               <a href="#" class="product-card">
                 <div class="product-card__img">
                   <img
-                    src="assets/images/menu/person-holding-bouquet-tulips.jpg"
+                    src="assets/images/index/g45.png"
                     alt="Хризантемы белые, 3 шт"
                   />
                 </div>
@@ -224,8 +220,7 @@
     <!-- Footer partial -->
     <div id="footer-placeholder"></div>
 
-    <!-- Скрипты -->
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script src="assets/libs/swiper/swiper-bundle.min.js"></script>
     <script src="assets/js/main.js"></script>
   </body>
 </html>

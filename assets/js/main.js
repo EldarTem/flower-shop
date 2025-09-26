@@ -23,12 +23,17 @@ async function includePartials() {
 
 // --- Swiper: hero ---
 function initHeroSwiper() {
-  const el = document.querySelector(".hero-slider .swiper");
-  if (!el || typeof Swiper === "undefined") return;
-  new Swiper(".hero-slider .swiper", {
+  if (typeof Swiper === "undefined") return;
+  new Swiper(".hero-swiper", {
     loop: true,
     autoplay: { delay: 5000 },
-    pagination: { el: ".hero-slider .swiper-pagination", clickable: true },
+    speed: 700,
+    pagination: {
+      el: ".hero-swiper .swiper-pagination",
+      clickable: true,
+      // без динамических буллетов — как на макете
+      // dynamicBullets: false
+    },
   });
 }
 
