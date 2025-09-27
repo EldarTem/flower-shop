@@ -45,7 +45,11 @@ body {
 body {
   padding-inline: var(--space-15);
 }
-
+@media (max-width: 781px) {
+  body {
+    padding-inline: var(--space-2);
+  }
+}
 img,
 svg {
   display: block;

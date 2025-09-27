@@ -4,6 +4,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   initHeroSwiper();
   initPopularSwiper();
   initMegaMenu();
+  initMobileNav(); // ← строит и подключает мобильное меню целиком через JS
 });
 
 // --- Вставка частичных шаблонов ---
@@ -213,6 +214,7 @@ function initMegaMenu() {
 
   const host = trigger.closest(".main-nav__item") || trigger;
 
+  // hover
   host.addEventListener("mouseenter", () => {
     cancelClose();
     if (!isOpen) openPopover();
@@ -222,6 +224,15 @@ function initMegaMenu() {
   popover.addEventListener("mouseenter", cancelClose);
   popover.addEventListener("mouseleave", scheduleClose);
 
+  // закрывать при клике по любому пункту внутри поповера
+  popover.addEventListener("click", (ev) => {
+    const link = ev.target.closest(".mega-link, .mega-title__link");
+    if (!link) return;
+    closePopover();
+    // тут можно дать SPA-роутеру обработать переход, ничего не препятствуем
+  });
+
+  // репозиционирование
   window.addEventListener("resize", () => {
     if (isOpen) positionPopover(popover, { anchorContainer, navBar }, 12);
   });
@@ -233,14 +244,254 @@ function initMegaMenu() {
     { passive: true }
   );
 
+  // a11y
   trigger.setAttribute("aria-haspopup", "true");
   trigger.setAttribute("aria-expanded", "false");
   trigger.addEventListener("focus", openPopover);
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && isOpen) closePopover();
+  document.addEventListener("keydown", (ev) => {
+    if (ev.key === "Escape" && isOpen) closePopover();
   });
-  const link = e.target.closest(".mega-link");
-  if (!link) return;
-  // если это “#” или SPA-роутер — закрываем и даём вашему роутеру обработать
-  closePopover();
+}
+function initMobileNav() {
+  const trigger = document.querySelector(".mnav-trigger");
+  if (!trigger) return;
+
+  let sheet = document.getElementById("mnav");
+  if (!sheet) {
+    sheet = buildMobileNavFromData({
+      menus: MEGA_MENUS,
+      phone: "+7 (978) 545-54-55",
+      socials: [
+        {
+          net: "ig",
+          icon: "assets/images/icons/instaIcon.svg",
+          href: "#",
+          label: "Instagram",
+        },
+        {
+          net: "vk",
+          icon: "assets/images/icons/vkIcon.svg",
+          href: "#",
+          label: "VK",
+        },
+        {
+          net: "wa",
+          icon: "assets/images/icons/whatsappIcon.svg",
+          href: "#",
+          label: "WhatsApp",
+        },
+        {
+          net: "tg",
+          icon: "assets/images/icons/tgIcon.svg",
+          href: "#",
+          label: "Telegram",
+        },
+      ],
+
+      staticSections: [
+        { label: "Дополнения", href: "/addition-menu.html" },
+        { label: "Цветочная подписка", href: "/subscription.html" },
+        { label: "Информация", href: "/info.html" },
+      ],
+    });
+    document.body.appendChild(sheet);
+  }
+
+  let backdrop = document.querySelector(".mnav-backdrop");
+  if (!backdrop) {
+    backdrop = document.createElement("div");
+    backdrop.className = "mnav-backdrop";
+    document.body.appendChild(backdrop);
+  }
+
+  const content = sheet.querySelector(".mnav__content");
+
+  const setSheetHeights = () => {
+    const vh =
+      Math.min(window.innerHeight || 0, screen.height || 0) ||
+      window.innerHeight;
+    // целевая высота панели (не выше 560px, и с запасом от краёв)
+    const H = Math.min(560, Math.max(360, vh - 80));
+    sheet.style.height = H + "px";
+    // запас ~60px под кнопки/паддинги/кроссбраузер
+    content.style.maxHeight = H - 60 + "px";
+  };
+
+  const open = () => {
+    setSheetHeights();
+    sheet.classList.add("is-open");
+    backdrop.classList.add("is-open");
+    trigger.setAttribute("aria-expanded", "true");
+    document.documentElement.classList.add("no-scroll");
+    window.addEventListener("resize", setSheetHeights, { passive: true });
+  };
+  const close = () => {
+    sheet.classList.remove("is-open");
+    backdrop.classList.remove("is-open");
+    trigger.setAttribute("aria-expanded", "false");
+    document.documentElement.classList.remove("no-scroll");
+    window.removeEventListener("resize", setSheetHeights);
+  };
+
+  if (!trigger.dataset.bound) {
+    trigger.addEventListener("click", open);
+    trigger.dataset.bound = "1";
+  }
+  const closeBtn = sheet.querySelector(".mnav__close");
+  if (closeBtn && !closeBtn.dataset.bound) {
+    closeBtn.addEventListener("click", close);
+    closeBtn.dataset.bound = "1";
+  }
+  if (!backdrop.dataset.bound) {
+    backdrop.addEventListener("click", close);
+    backdrop.dataset.bound = "1";
+  }
+  if (!sheet.dataset.boundLinks) {
+    sheet.addEventListener("click", (ev) => {
+      // закрываем ТОЛЬКО при клике по ссылке
+      const a = ev.target.closest("a");
+      if (a) close();
+    });
+    sheet.dataset.boundLinks = "1";
+  }
+  if (!document.documentElement.dataset.mnavEsc) {
+    document.addEventListener("keydown", (ev) => {
+      if (ev.key === "Escape") close();
+    });
+    document.documentElement.dataset.mnavEsc = "1";
+  }
+}
+function buildMobileNavFromData(cfg) {
+  const sheet = document.createElement("div");
+  sheet.id = "mnav";
+  sheet.className = "mnav";
+  sheet.setAttribute("role", "dialog");
+  sheet.setAttribute("aria-modal", "true");
+  sheet.setAttribute("aria-hidden", "true");
+
+  sheet.innerHTML = `
+    <button class="mnav__close" type="button" aria-label="Закрыть">×</button>
+    <nav class="mnav__content"></nav>
+  `;
+  const cont = sheet.querySelector(".mnav__content");
+
+  const cols = cfg.menus && cfg.menus.flowers ? cfg.menus.flowers : [];
+  const acc = document.createElement("div");
+  acc.className = "mnav-acc";
+
+  cols.forEach((col) => {
+    const item = document.createElement("div");
+    item.className = "mnav-acc__item";
+
+    // head: ссылка + отдельная кнопка-стрелка
+    const head = document.createElement("div");
+    head.className = "mnav-acc__head";
+
+    const link = document.createElement("a");
+    link.className = "mnav-acc__link";
+    link.href = col.href || "#";
+    link.textContent = col.title || "";
+
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "mnav-acc__chev-btn";
+    btn.setAttribute("aria-expanded", "false");
+    btn.innerHTML = `<span class="mnav-acc__chev"></span>`;
+
+    head.append(link, btn);
+
+    // panel
+    const panel = document.createElement("div");
+    panel.className = "mnav-acc__panel";
+    panel.style.height = "0px";
+
+    const ul = document.createElement("ul");
+    ul.className = "mnav-acc__list";
+
+    if (col.href) {
+      const liAll = document.createElement("li");
+      const aAll = document.createElement("a");
+      aAll.href = col.href;
+      aAll.textContent = `Все ${col.title?.toLowerCase() || ""}`;
+      liAll.appendChild(aAll);
+      ul.appendChild(liAll);
+    }
+
+    (col.items || []).forEach((it) => {
+      const li = document.createElement("li");
+      const a = document.createElement("a");
+      a.href = it.href || "#";
+      a.textContent = it.label || "";
+      li.appendChild(a);
+      ul.appendChild(li);
+    });
+
+    panel.appendChild(ul);
+    item.append(head, panel);
+    acc.appendChild(item);
+
+    // раскрытие ТОЛЬКО по стрелке; фикс «первого клика»
+    btn.addEventListener("click", () =>
+      toggleAccordionSmooth(item, panel, btn)
+    );
+  });
+
+  cont.appendChild(acc);
+
+  (cfg.staticSections || []).forEach((s) => {
+    const a = document.createElement("a");
+    a.className = "mnav__section";
+    a.href = s.href || "#";
+    a.textContent = s.label || "";
+    cont.appendChild(a);
+  });
+
+  const hr = document.createElement("hr");
+  hr.className = "mnav__divider";
+  cont.appendChild(hr);
+
+  const social = document.createElement("div");
+  social.className = "mnav__social";
+  (cfg.socials || []).forEach((s) => {
+    const a = document.createElement("a");
+    a.className = `mnav__soc${s.net ? " mnav__soc--" + s.net : ""}`;
+    a.href = s.href || "#";
+    a.setAttribute("aria-label", s.label || "");
+    const img = document.createElement("img");
+    img.src = s.icon;
+    img.alt = "";
+    a.appendChild(img);
+    social.appendChild(a);
+  });
+  cont.appendChild(social);
+
+const phoneWrap = document.createElement('div');
+phoneWrap.className = 'mnav__phone-wrap';
+const phone = document.createElement('a');
+phone.className = 'mnav__phone';
+phone.href = `tel:${(cfg.phone || '').replace(/\D/g,'')}`;
+phone.textContent = cfg.phone || '';
+phoneWrap.appendChild(phone);
+cont.appendChild(phoneWrap);
+
+
+  return sheet;
+}
+
+/* Плавное раскрытие с надёжной фиксацией первой анимации */
+function toggleAccordionSmooth(item, panel, btn) {
+  const isOpen = item.classList.contains("is-open");
+  const start = panel.offsetHeight; // форсим reflow и берём текущую высоту
+  const end = isOpen ? 0 : panel.scrollHeight; // целевая высота
+
+  item.classList.toggle("is-open", !isOpen);
+  btn.setAttribute("aria-expanded", String(!isOpen));
+
+  // стартуем с текущего значения -> к целевому (без скачков)
+  panel.style.height = start + "px";
+  // ещё один reflow перед изменением (некоторые браузеры любят это)
+  void panel.offsetWidth;
+  requestAnimationFrame(() => {
+    panel.style.height = end + "px";
+  });
 }

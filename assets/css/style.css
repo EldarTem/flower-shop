@@ -277,7 +277,6 @@ ul.social__list li.social__item {
   }
 }
 
-
 /* ===== CATEGORIES ===== */
 :root {
   --cat-h: 480px; /* единая высота карточек; при необходимости подправь */
@@ -1368,6 +1367,76 @@ ul.social__list li.social__item {
   grid-template-columns: 1fr 1fr;
   gap: 12px 16px;
 }
+
+.mnav-trigger {
+  display: none;
+}
+@media (max-width: 780px) {
+  .site-header__logo {
+    max-width: 200px;
+  }
+  .main-nav {
+    padding-block: var(--space-4);
+  }
+  .main-nav__list {
+    display: none;
+  }
+  .header-actions__phone {
+    display: none;
+  }
+  .header-actions {
+    gap: 10px;
+  }
+  .social__list {
+    display: none;
+    gap: 10px;
+  }
+  .social__link--circle,
+  .social__link--ghost {
+    width: 36px;
+    height: 36px;
+  }
+  .social__icon {
+    width: 20px;
+  }
+  .header-actions__cart {
+    width: 36px;
+    height: 36px;
+  }
+  .header-actions__cart img {
+    width: 18px;
+    margin-left: 0;
+  }
+
+  /* кнопка-пилюля */
+  .mnav-trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    height: 38px;
+    padding: 0 16px;
+    border-radius: 999px;
+    background: #fff;
+    color: #000;
+    border: 1px solid #fff;
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    transition: transform 0.2s ease, box-shadow 0.2s ease,
+      background-color 0.2s ease;
+  }
+  .mnav-trigger:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.35);
+  }
+  .mnav-trigger__icon {
+    filter: invert(0);
+    height: 20px;
+    width: 20px;
+  }
+}
+
 .pill-input {
   width: 100%;
   height: 46px;
@@ -1422,4 +1491,180 @@ ul.social__list li.social__item {
   .sub-block__title {
     font-size: 26px;
   }
+}
+/* Backdrop + no-scroll */
+/* Backdrop + no-scroll */
+.no-scroll {
+  overflow: hidden;
+}
+.mnav-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 1100;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.32s ease;
+}
+.mnav-backdrop.is-open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Bottom-sheet меню (без рывков) */
+.mnav {
+  position: fixed;
+  left: 0;
+  width: 100%;
+  top: 175px;
+  /* высоту задаём JS при открытии => панель не двигается при аккордеоне */
+  background: #fff;
+  color: #111;
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+  z-index: 1201;
+  overflow: hidden;
+
+  transform: translateY(100%);
+  opacity: 0;
+  transition: transform 0.6s cubic-bezier(0.22, 0.9, 0.22, 1), opacity 0.6s ease;
+}
+.mnav.is-open {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.mnav__close {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  font-size: 32px;
+  cursor: pointer;
+  color: #111;
+}
+.mnav__content {
+  padding: 32px 18px 22px;
+  /* макс-высоту задаём JS в зависимости от высоты панели */
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.mnav__section {
+  display: block;
+  padding: 10px 6px;
+  margin-top: 2px;
+  font-size: 22px;
+  text-transform: uppercase;
+  color: #111;
+}
+.mnav__social {
+  display: flex;
+  gap: 25px;
+  margin: 20px 0 20px;
+  justify-content: center;
+}
+.mnav__soc {
+  width: 40px;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #000;
+  border-radius: 50px;
+  border: none;
+}
+.mnav__soc img {
+  width: 22px;
+  height: 22px;
+  filter: none;
+}
+/* Аккордеон: заголовок = ссылка, стрелка = кнопка */
+.mnav-acc__item {
+  border-bottom: 1px solid #eee;
+}
+.mnav-acc__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 6px;
+}
+.mnav-acc__link {
+  font-size: 22px;
+  text-transform: uppercase;
+  color: #111;
+  line-height: 1;
+}
+
+.mnav-acc__chev-btn {
+  width: 36px;
+  height: 36px;
+  border: none;
+  display: inline-flex;
+  background-color: transparent;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  transition: background-color 0.2s ease, border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.mnav-acc__chev {
+  width: 10px;
+  height: 10px;
+  display: inline-block;
+  border-right: 2px solid #111;
+  border-bottom: 2px solid #111;
+  transform: rotate(-45deg);
+  margin-left: -3px;
+  transition: transform 0.26s cubic-bezier(0.22, 0.9, 0.22, 1);
+}
+.mnav-acc__item.is-open .mnav-acc__chev {
+  transform: rotate(45deg);
+  margin-left: 3px;
+  margin-top: -3px;
+}
+
+.mnav-acc__panel {
+  overflow: hidden;
+  height: 0;
+  will-change: height;
+  transition: height 0.34s cubic-bezier(0.22, 0.9, 0.22, 1);
+}
+.mnav-acc__list {
+  list-style: none;
+  margin: 0;
+  padding: 0 0 10px 0;
+}
+.mnav-acc__list a {
+  display: block;
+  padding: 8px 6px 8px 10px;
+  color: #111;
+  font-size: 18px;
+}
+
+/* ===== mobile sheet ===== */
+.mnav__soc--ig,
+.mnav__soc--vk {
+  background-color: transparent;
+}
+.mnav__soc--ig img,
+.mnav__soc--vk img {
+  width: 40px;
+  height: 40px;
+  filter: none;
+}
+.mnav__soc--wa img,
+.mnav__soc--tg img {
+  filter: invert(1);
+}
+
+.mnav__phone-wrap {
+  display: flex;
+  justify-content: center;
+  font-size: 22px;
 }
