@@ -41,21 +41,32 @@ function initHeroSwiper() {
 // --- Swiper: popular (карусель) ---
 function initPopularSwiper() {
   if (typeof Swiper === "undefined") return;
+
   new Swiper(".popular-swiper", {
+    // карусель
     loop: true,
-    loopAdditionalSlides: 4,
+    // небольшая «подушка» для бесшовного цикла
+    loopAdditionalSlides: 8,
     speed: 600,
     grabCursor: true,
-    spaceBetween: 28,
+    watchOverflow: false,
+
     navigation: {
       nextEl: ".popular-next",
       prevEl: ".popular-prev",
     },
+
     keyboard: { enabled: true },
+
     breakpoints: {
-      0: { slidesPerView: 1, spaceBetween: 16 },
-      640: { slidesPerView: 2, spaceBetween: 20 },
-      900: { slidesPerView: 3, spaceBetween: 24 },
+      // Мобилка — 2 карточки, компактные промежутки
+      0: { slidesPerView: 2, spaceBetween: 12 },
+      480: { slidesPerView: 2, spaceBetween: 16 },
+
+      // Планшет
+      768: { slidesPerView: 3, spaceBetween: 20 },
+
+      // Десктоп
       1200: { slidesPerView: 4, spaceBetween: 28 },
     },
   });
@@ -69,11 +80,11 @@ const MEGA_MENUS = {
       href: "/bouquet-menu.html", // ← ссылка для заголовка колонки
       divided: false,
       items: [
-        { label: "Авторские", href: "/bouquets/author.html" },
-        { label: "На вкус флориста", href: "/bouquets/florist-choice.html" },
-        { label: "Гиганты", href: "/bouquets/giants.html" },
-        { label: "101 роза", href: "/bouquets/101-roses.html" },
-        { label: "Свадебные букеты", href: "/bouquets/wedding.html" },
+        { label: "Авторские", href: "/catalog.html" },
+        { label: "На вкус флориста", href: "/catalog.html" },
+        { label: "Гиганты", href: "/catalog.html" },
+        { label: "101 роза", href: "/catalog.html" },
+        { label: "Свадебные букеты", href: "/catalog.html" },
       ],
     },
     {
@@ -81,14 +92,14 @@ const MEGA_MENUS = {
       href: "/flower-menu.html", // опционально
       divided: true,
       items: [
-        { label: "Розы", href: "/flowers/roses.html" },
-        { label: "Кустовые розы", href: "/flowers/spray-roses.html" },
-        { label: "Пионовидные розы", href: "/flowers/garden-roses.html" },
-        { label: "Гортензии", href: "/flowers/hydrangea.html" },
-        { label: "Хризантемы", href: "/flowers/chrysanthemum.html" },
-        { label: "Диантусы", href: "/flowers/dianthus.html" },
-        { label: "Тюльпаны", href: "/flowers/tulips.html" },
-        { label: "Гипсофилы", href: "/flowers/gypsophila.html" },
+        { label: "Розы", href: "/catalog.html" },
+        { label: "Кустовые розы", href: "/catalog.html" },
+        { label: "Пионовидные розы", href: "/catalog.html" },
+        { label: "Гортензии", href: "/catalog.html" },
+        { label: "Хризантемы", href: "/catalog.html" },
+        { label: "Диантусы", href: "/catalog.html" },
+        { label: "Тюльпаны", href: "/catalog.html" },
+        { label: "Гипсофилы", href: "/catalog.html" },
       ],
     },
     {
@@ -96,10 +107,10 @@ const MEGA_MENUS = {
       href: "/composition-menu.html",
       divided: true,
       items: [
-        { label: "Коробы", href: "/compositions/boxes.html" },
-        { label: "Коробки", href: "/compositions/cases.html" },
-        { label: "Сумочки", href: "/compositions/bags.html" },
-        { label: "Корзины", href: "/compositions/baskets.html" },
+        { label: "Коробы", href: "/catalog.html" },
+        { label: "Коробки", href: "/catalog.html" },
+        { label: "Сумочки", href: "/catalog.html" },
+        { label: "Корзины", href: "/catalog.html" },
       ],
     },
   ],
@@ -465,15 +476,14 @@ function buildMobileNavFromData(cfg) {
   });
   cont.appendChild(social);
 
-const phoneWrap = document.createElement('div');
-phoneWrap.className = 'mnav__phone-wrap';
-const phone = document.createElement('a');
-phone.className = 'mnav__phone';
-phone.href = `tel:${(cfg.phone || '').replace(/\D/g,'')}`;
-phone.textContent = cfg.phone || '';
-phoneWrap.appendChild(phone);
-cont.appendChild(phoneWrap);
-
+  const phoneWrap = document.createElement("div");
+  phoneWrap.className = "mnav__phone-wrap";
+  const phone = document.createElement("a");
+  phone.className = "mnav__phone";
+  phone.href = `tel:${(cfg.phone || "").replace(/\D/g, "")}`;
+  phone.textContent = cfg.phone || "";
+  phoneWrap.appendChild(phone);
+  cont.appendChild(phoneWrap);
 
   return sheet;
 }
@@ -493,5 +503,51 @@ function toggleAccordionSmooth(item, panel, btn) {
   void panel.offsetWidth;
   requestAnimationFrame(() => {
     panel.style.height = end + "px";
+  });
+}
+
+function initContactsMap() {
+  if (!window.ymaps) return;
+
+  ymaps.ready(() => {
+    // координаты: [широта, долгота] — подставь свои при необходимости
+    const center = [44.952, 34.108];
+
+    const map = new ymaps.Map(
+      "contacts-map",
+      {
+        center,
+        zoom: 17,
+        controls: [], // не добавляем ни одного контрола
+      },
+      {
+        suppressMapOpenBlock: true, // убираем всплывашку "Открыть в Яндекс.Картах"
+      }
+    );
+
+    // На всякий случай удалим, если что-то появится
+    [
+      "trafficControl",
+      "geolocationControl",
+      "rulerControl",
+      "typeSelector",
+      "fullscreenControl",
+      "zoomControl",
+      "searchControl",
+    ].forEach((c) => map.controls.remove(c));
+
+    // Отключить нежелательные поведения (можно оставить drag, как удобно)
+    map.behaviors.disable(["scrollZoom", "rightMouseButtonMagnifier"]);
+
+    // Маркер
+    const placemark = new ymaps.Placemark(
+      center,
+      {
+        hintContent: "Розы от Эдема",
+        balloonContent: "г. Симферополь, пер. Карьерный, д.15/28а",
+      },
+      { preset: "islands#nightDotIcon" }
+    );
+    map.geoObjects.add(placemark);
   });
 }

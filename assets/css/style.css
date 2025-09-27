@@ -6,7 +6,10 @@
 .site-header__brand {
   text-align: center;
 }
-
+.site-header__brand-link {
+  display: inline-block; /* не растягиваемся на всю строку */
+  line-height: 0;
+}
 .site-header__logo {
   max-width: 450px;
   margin-inline: auto;
@@ -41,8 +44,28 @@
   display: inline-flex;
   align-items: center;
   gap: 10px;
+  position: relative;
+  transition: opacity 0.18s ease, transform 0.18s ease;
 }
-
+.main-nav__link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -6px;
+  height: 1px;
+  background: #fff;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.22s ease;
+  opacity: 0.9;
+}
+.main-nav__link:hover {
+  transform: translateY(-1px);
+}
+.main-nav__link:hover::after {
+  transform: scaleX(1);
+}
 .main-nav__icon img {
   filter: invert(1);
   display: inline-flex;
@@ -65,8 +88,14 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  transition: box-shadow 0.2s ease, transform 0.2s ease,
+    background-color 0.2s ease;
 }
-
+.header-actions__cart:hover {
+  transform: translateY(-1px);
+  background: #fff;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+}
 .header-actions__cart img {
   width: 20px;
   margin-left: -3px;
@@ -75,8 +104,12 @@
 .header-actions__phone {
   font-weight: 700;
   white-space: nowrap;
+  transition: opacity 0.18s ease, text-shadow 0.18s ease;
 }
-
+.header-actions__phone:hover {
+  text-decoration: underline;
+  opacity: 0.95;
+}
 /* ---------- Social ---------- */
 .social__list {
   display: flex;
@@ -109,7 +142,19 @@ ul.social__list li.social__item {
   width: 32px;
   height: 32px;
 }
-
+.social__link--circle,
+.social__link--ghost {
+  transition: transform 0.18s ease, box-shadow 0.18s ease,
+    background-color 0.18s ease, border-color 0.18s ease;
+}
+.social__link--circle:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
+}
+.social__link--ghost:hover {
+  transform: translateY(-1px);
+  border-color: #fff;
+}
 /* Делает чёрные svg белыми */
 .social__icon,
 .main-nav__icon img {
@@ -293,7 +338,13 @@ ul.social__list li.social__item {
   text-transform: uppercase;
   margin-bottom: 24px;
 }
+@media (max-width: 640px) {
+  .categories__title {
+    font-size: 28px;
 
+    margin-bottom: 24px;
+  }
+}
 /* Сетка 12 колонок:
    hero — слева, 8 колонок;
    menu — справа, 4 колонки;
@@ -414,6 +465,66 @@ ul.social__list li.social__item {
 
   .cat-card__label {
     font-size: 22px;
+  }
+}
+
+/* ===== CATEGORIES — мобильная раскладка как на макете ===== */
+@media (max-width: 640px) {
+  .categories {
+    margin-block: 40px 28px;
+  }
+
+  /* сетка: 2 колонки — чтобы средний ряд был 2×1 */
+  .categories__grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px; /* чуть плотнее, как на скрине */
+  }
+
+  /* единый вид карточек: тонкая белая рамка */
+  .cat-card {
+    border: 1px solid rgba(255, 255, 255, 0.9);
+    border-radius: 6px;
+    height: auto; /* высоту задаём через aspect-ratio ниже */
+    overflow: hidden;
+  }
+  .cat-card img {
+    object-fit: cover;
+  }
+
+  /* 1-я строка — широкая */
+  .cat-card--hero {
+    grid-column: 1 / -1; /* на две колонки */
+    aspect-ratio: 4 / 3; /* близко к тому, что на скрине */
+  }
+
+  /* 2-я строка — две плитки */
+  .cat-card--menu {
+    grid-column: 1 / span 1; /* левая плитка */
+    aspect-ratio: 3 / 4;
+  }
+  .cat-card--comp {
+    grid-column: 2 / span 1; /* правая плитка */
+    aspect-ratio: 3 / 4;
+  }
+
+  /* 3-я строка — широкая */
+  .cat-card--add {
+    grid-column: 1 / -1;
+    aspect-ratio: 4 / 3;
+  }
+
+  /* подписи чуть меньше и ближе к краям */
+  .cat-card__label {
+    font-size: 16px;
+    top: 10px;
+    left: 10px;
+  }
+  .cat-card__label--br {
+    /* как на макете — в правом нижнем углу */
+    top: auto;
+    left: auto;
+    right: 16px;
+    bottom: 14px;
   }
 }
 
@@ -546,15 +657,44 @@ ul.social__list li.social__item {
   }
 }
 @media (max-width: 640px) {
+  .popular-nav {
+    display: none;
+  }
+  .popular-swiper {
+    padding: 0;
+  }
+
   :root {
-    --popular-img-h: 240px;
+    --popular-img-h: 210px;
   }
-  .popular {
-    margin-block: 44px 24px;
-  }
+
+  .popular-swiper {
+    padding: 0;
+  } /* без боковых внутренних отступов */
   .popular__title {
     font-size: 28px;
     letter-spacing: 1.5px;
+  }
+
+  /* стрелки чуть меньше и ближе к краям, центр по высоте картинок сохранён */
+  .popular-nav {
+    width: 38px;
+    height: 38px;
+  }
+  .popular-prev {
+    left: -6px;
+  }
+  .popular-next {
+    right: -6px;
+  }
+  .product-card__title {
+    font-size: 16px; /* было 18px */
+  }
+
+  /* Ценник по центру */
+  .product-card__price {
+    padding: 6px 13px;
+    font-size: 16px;
   }
 }
 
@@ -665,12 +805,27 @@ ul.social__list li.social__item {
     letter-spacing: 1.5px;
   }
   .trust__list {
-    font-size: 20px;
+    font-size: 16px;
     row-gap: 14px;
   }
   .trust__rating {
     font-size: 16px;
     padding: 9px 16px;
+  }
+  .trust__list li::before {
+    width: 9px;
+    height: 5px;
+    border-left: 2px solid #fff;
+    border-bottom: 2px solid #fff;
+  }
+  .trust__list li {
+    position: relative;
+    padding-left: 20px;
+  }
+  .trust__content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
 }
 
@@ -729,7 +884,7 @@ ul.social__list li.social__item {
   display: grid;
   grid-template-columns: repeat(2, 64px);
   grid-auto-rows: 64px;
-  gap: 16px 18px;
+  gap: 20px 22px;
   align-content: start;
 }
 .contacts__soc {
@@ -746,11 +901,12 @@ ul.social__list li.social__item {
 }
 
 /* Рамочные (VK/IG) */
-.contacts__soc--ghost {
-  border: 2px solid #fff;
-  background: transparent;
-}
 
+.contacts__soc--ghost img {
+  width: 64px;
+  height: 64px;
+  filter: invert(1);
+}
 /* Круглые с фоном (WA/TG) */
 .contacts__soc--circle {
   width: 64px;
@@ -758,7 +914,19 @@ ul.social__list li.social__item {
   border-radius: 50%;
   background: #aeaeae;
 }
-
+.contacts__soc--circle,
+.contacts__soc--ghost {
+  transition: transform 0.18s ease, box-shadow 0.18s ease,
+    background-color 0.18s ease, border-color 0.18s ease;
+}
+.contacts__soc--circle:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
+}
+.contacts__soc--ghost:hover {
+  transform: translateY(-1px);
+  border-color: #fff;
+}
 /* ===== FOOTER ===== */
 .site-footer {
   margin-top: 40px;
@@ -809,7 +977,7 @@ ul.social__list li.social__item {
     letter-spacing: 1.5px;
   }
   .contacts__lines {
-    font-size: 20px;
+    font-size: 16px;
     row-gap: 14px;
   }
   .contacts__social {
@@ -1377,6 +1545,9 @@ ul.social__list li.social__item {
   }
   .main-nav {
     padding-block: var(--space-4);
+  }
+  .main-nav__bar {
+    flex-direction: row-reverse;
   }
   .main-nav__list {
     display: none;

@@ -10,6 +10,51 @@
   margin: 0;
   padding: 0;
 }
+/* === Глобально: убрать tap-highlight и привести focus к одному виду === */
+
+/* 1) tap-highlight на мобильных (iOS/Android) */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* 2) Снять браузерные артефакты и привести к единому поведению */
+:where(
+    button,
+    [type="button"],
+    [type="submit"],
+    [type="reset"],
+    input,
+    select,
+    textarea
+  ) {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+/* 3) Глобально убрать outline на фокус, но... */
+:where(a, button, input, select, textarea, [role="button"], [tabindex]):focus {
+  outline: none;
+}
+
+/* 4) ...оставить ВИДИМЫЙ фокус для клавиатуры */
+:where(
+    a,
+    button,
+    input,
+    select,
+    textarea,
+    [role="button"],
+    [tabindex]
+  ):focus-visible {
+  /* универсальное «кольцо» под тёмную тему сайта */
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.22);
+  border-color: #fff; /* если у элемента есть рамка — слегка подсветим */
+}
+
+/* 5) Firefox убираем внутренний бордер на кнопках */
+:where(button, input[type="button"], input[type="submit"])::-moz-focus-inner {
+  border: 0;
+}
 
 /* Токены */
 :root {
