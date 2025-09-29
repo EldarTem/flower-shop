@@ -33,7 +33,9 @@
           <a href="/addition-menu.html" class="main-nav__link">Дополнения</a>
         </li>
         <li class="main-nav__item">
-          <a href="#" class="main-nav__link">Цветочная подписка</a>
+          <a href="/subscription.html" class="main-nav__link"
+            >Цветочная подписка</a
+          >
         </li>
         <li class="main-nav__item">
           <a href="#" class="main-nav__link">Информация</a>
@@ -41,8 +43,14 @@
       </ul>
 
       <div class="header-actions" role="group" aria-label="Действия">
-        <a href="#" class="header-actions__cart" aria-label="Корзина">
+        <a
+          href="#"
+          class="header-actions__cart"
+          aria-label="Корзина"
+          data-open-cart
+        >
           <img src="assets/images/icons/basketIcon.svg" alt="" />
+          <span class="cart-indicator" aria-hidden="true"></span>
         </a>
 
         <a

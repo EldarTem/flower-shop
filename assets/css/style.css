@@ -270,6 +270,11 @@ ul.social__list li.social__item {
   text-transform: uppercase;
   letter-spacing: 0.5px;
   margin-bottom: 16px;
+  position: relative;
+  display: inline-flex;
+}
+.mega-title:hover {
+  transform: translateY(-1px);
 }
 .mega-list {
   list-style: none;
@@ -277,14 +282,33 @@ ul.social__list li.social__item {
   padding: 0;
 }
 .mega-link {
-  display: block;
   padding: 6px 0;
   font-size: 22px;
   line-height: 1.25;
   color: #111;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+}
+.mega-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: #111;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.22s ease;
+  opacity: 0.9;
 }
 .mega-link:hover {
-  text-decoration: underline;
+  transform: translateY(-1px);
+}
+.mega-link:hover::after {
+  transform: scaleX(1);
 }
 
 @media (max-width: 1100px) {
@@ -586,60 +610,8 @@ ul.social__list li.social__item {
   display: block;
 }
 
-.product-card {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  height: 100%;
-}
-
-/* Выше картинки */
-.product-card__img {
-  border: 1px solid rgba(255, 255, 255, 0.7);
-  border-radius: 8px;
-  overflow: hidden;
-  height: var(--popular-img-h);
-}
-.product-card__img img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-  transition: transform 0.35s ease;
-}
-.product-card:hover .product-card__img img {
-  transform: scale(1.03);
-}
-
-/* Название — крупнее */
-.product-card__title {
-  font-size: 22px; /* было 18px */
-  line-height: 1.3;
-  min-height: calc(1.3em * 2); /* держим 2 строки */
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-}
-
-/* Ценник по центру */
-.product-card__price {
-  margin-top: auto;
-  align-self: center;
-  background: #fff;
-  color: #000;
-  border-radius: 999px;
-  padding: 12px 26px;
-  font-size: 18px;
-  font-weight: 600;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
-}
-
 /* Адаптив */
 @media (max-width: 1200px) {
-  :root {
-    --popular-img-h: 340px;
-  }
   .popular-prev {
     left: -10px;
   }
@@ -648,9 +620,6 @@ ul.social__list li.social__item {
   }
 }
 @media (max-width: 900px) {
-  :root {
-    --popular-img-h: 300px;
-  }
   .popular-nav {
     width: 42px;
     height: 42px;
@@ -662,10 +631,6 @@ ul.social__list li.social__item {
   }
   .popular-swiper {
     padding: 0;
-  }
-
-  :root {
-    --popular-img-h: 210px;
   }
 
   .popular-swiper {
@@ -686,15 +651,6 @@ ul.social__list li.social__item {
   }
   .popular-next {
     right: -6px;
-  }
-  .product-card__title {
-    font-size: 16px; /* было 18px */
-  }
-
-  /* Ценник по центру */
-  .product-card__price {
-    padding: 6px 13px;
-    font-size: 16px;
   }
 }
 
@@ -722,7 +678,7 @@ ul.social__list li.social__item {
 /* Фото слева */
 .trust__media {
   margin: 0;
-  border: 1px solid rgba(255, 255, 255, 0.8);
+  border: 2px solid rgba(255, 255, 255, 0.8);
   border-radius: 10px;
   overflow: hidden;
 }
@@ -1091,9 +1047,6 @@ ul.social__list li.social__item {
 }
 
 /* ===== CATALOG ===== */
-:root {
-  --catalog-img-h: 340px;
-} /* высота превью в каталоге */
 
 .catalog {
   padding-block: 24px 48px;
@@ -1112,73 +1065,9 @@ ul.social__list li.social__item {
   grid-template-columns: repeat(4, 1fr);
   gap: 28px;
 }
-
-/* карточка */
-.product-card--catalog {
-  border-radius: 12px;
-  padding: 12px 12px 16px;
-  background: rgba(255, 255, 255, 0);
-  /* единый набор анимируемых свойств */
-  transition: background-color 0.25s ease, box-shadow 0.25s ease,
-    transform 0.25s ease, color 0.25s ease;
-  will-change: transform, box-shadow, background-color;
+.catalog__grid > * {
+  overflow: visible;
 }
-
-.product-card--catalog .product-card__img {
-  height: var(--catalog-img-h);
-  border: 1px solid rgba(255, 255, 255, 0.7);
-  border-radius: 10px;
-  overflow: hidden;
-  transition: border-color 0.25s ease, transform 0.35s ease; /* зум фото, смена рамки */
-}
-
-.product-card--catalog .product-card__title {
-  font-size: 18px;
-  line-height: 1.35;
-  min-height: calc(1.35em * 2);
-  transition: color 0.25s ease;
-}
-
-/* ценник по центру — как на карусели */
-.product-card--catalog .product-card__price {
-  align-self: center;
-  margin-top: 10px;
-  background: #fff;
-  color: #000;
-  border-radius: 999px;
-  padding: 10px 22px;
-  font-size: 18px;
-  font-weight: 600;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
-  transition: background-color 0.25s ease, color 0.25s ease,
-    box-shadow 0.25s ease;
-}
-
-/* hover/active — без изменения padding, всё плавно */
-.product-card--catalog:hover,
-.product-card--catalog.is-active {
-  background: #fff;
-  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.35);
-  transform: translateY(-2px);
-  color: #000;
-}
-.product-card--catalog:hover .product-card__img,
-.product-card--catalog.is-active .product-card__img {
-  border-color: rgba(0, 0, 0, 0.12);
-  transform: scale(1.02);
-}
-.product-card--catalog:hover .product-card__title,
-.product-card--catalog.is-active .product-card__title {
-  color: #000;
-}
-
-/* ценник инвертируется — тоже плавно */
-.product-card--catalog:hover .product-card__price {
-  background: #000;
-  color: #fff;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
-}
-
 /* пагинация */
 .pagination {
   margin-top: 28px;
@@ -1203,40 +1092,24 @@ ul.social__list li.social__item {
 
 /* адаптив */
 @media (max-width: 1200px) {
-  :root {
-    --catalog-img-h: 300px;
-  }
   .catalog__grid {
     grid-template-columns: repeat(3, 1fr);
     gap: 24px;
   }
 }
 @media (max-width: 900px) {
-  :root {
-    --catalog-img-h: 260px;
-  }
   .catalog__grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 20px;
   }
 }
 @media (max-width: 600px) {
-  :root {
-    --catalog-img-h: 220px;
-  }
   .catalog__grid {
-    grid-template-columns: 1fr;
-    gap: 16px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
   }
   .catalog__title {
     font-size: 30px;
-  }
-}
-
-/* уважение к системной настройке «уменьшить анимацию» */
-@media (prefers-reduced-motion: reduce) {
-  * {
-    transition: none !important;
   }
 }
 
@@ -1838,4 +1711,26 @@ ul.social__list li.social__item {
   display: flex;
   justify-content: center;
   font-size: 22px;
+}
+
+.header-actions__cart {
+  position: relative;
+}
+.cart-badge {
+  position: absolute;
+  right: -4px;
+  bottom: -4px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  border-radius: 999px;
+  background: #10b981;
+  color: #fff;
+  font-size: 12px;
+  line-height: 18px;
+  text-align: center;
+  display: none;
+}
+.cart-badge.is-on {
+  display: block;
 }

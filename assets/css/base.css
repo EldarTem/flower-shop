@@ -76,7 +76,7 @@
 
   --container-max: 1400px;
 
-  --font-ui: "Cormorant Garamond", serif;
+  --font-ui: "futuralight", serif;
   --fs-nav: 22px;
 }
 
@@ -127,4 +127,103 @@ a {
   clip-path: inset(50%);
   overflow: hidden;
   white-space: nowrap;
+}
+
+/* Regular */
+@font-face {
+  font-family: "futuralight";
+  src: url("../fonts/futuralight.ttf") format("ttf"),
+    url("../fonts/futuralight.ttf") format("ttf");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap; /* важное — не блокируем отрисовку текста */
+}
+
+/* Medium (пример) */
+@font-face {
+  font-family: "futuralight";
+  src: url("../fonts/futuralight.ttf") format("ttf");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Bold */
+@font-face {
+  font-family: "futuralight";
+  src: url("../fonts/futuralight.ttf") format("ttf");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Italic (если есть) */
+@font-face {
+  font-family: "futuralight";
+  src: url("../fonts/futuralight.ttf") format("ttf");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* ===== Toast ===== */
+#toast-root {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%);
+  z-index: 1000;
+  pointer-events: none;
+}
+.toast {
+  background: rgba(0, 0, 0, 0.9);
+  color: #fff;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 14px;
+  line-height: 1.2;
+  margin-top: 8px;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  pointer-events: auto;
+}
+.toast.is-open {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ===== Индикатор корзины (пузырёк на иконке) ===== */
+.header-actions__cart {
+  position: relative;
+}
+.cart-indicator {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  background: #03c122;
+  color: #fff;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 18px;
+  text-align: center;
+  opacity: 0;
+  transform: scale(0.9);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+.cart-indicator.is-visible {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* ===== Состояние кнопки после добавления ===== */
+.product-card__price.is-added {
+  background: #000;
+  color: #fff;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.2);
 }

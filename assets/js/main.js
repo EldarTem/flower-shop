@@ -1,10 +1,38 @@
-// Вставка header/footer и инициализация всего остального
 document.addEventListener("DOMContentLoaded", async () => {
-  await includePartials();
-  initHeroSwiper();
-  initPopularSwiper();
-  initMegaMenu();
-  initMobileNav(); // ← строит и подключает мобильное меню целиком через JS
+  await includePartials?.();
+  updateCartIndicator();
+  // мостики высот (чтобы стрелки/картинки были синхронны)
+  const popular = document.querySelector(".popular");
+  if (popular) {
+    const v = getComputedStyle(document.documentElement).getPropertyValue(
+      "--popular-img-h"
+    );
+    if (v) popular.style.setProperty("--pc-img-h", v);
+  }
+  const catalog = document.querySelector(".catalog");
+  if (catalog) {
+    const v = getComputedStyle(document.documentElement).getPropertyValue(
+      "--catalog-img-h"
+    );
+    if (v) catalog.style.setProperty("--pc-img-h-catalog", v);
+  }
+
+  // если есть карусель «Популярное» — отрисуем
+  await renderPopularFromJson?.();
+
+  // если мы на странице каталога — отрисуем сетку каталога
+  if (document.querySelector("#catalog-grid")) {
+    await renderCatalogFromJson({
+      url: "assets/data/products.json",
+      container: "#catalog-grid",
+      // limit: 24
+    });
+  }
+
+  initHeroSwiper?.();
+  initPopularSwiper?.();
+  initMegaMenu?.();
+  initMobileNav?.(); // если используешь
 });
 
 // --- Вставка частичных шаблонов ---
@@ -551,3 +579,266 @@ function initContactsMap() {
     map.geoObjects.add(placemark);
   });
 }
+
+/* ---------- Helpers ---------- */
+const isFinePointer = window.matchMedia("(pointer: fine)").matches;
+
+function formatPrice(num) {
+  try {
+    return new Intl.NumberFormat("ru-RU").format(num) + " ₽";
+  } catch {
+    return `${num} ₽`;
+  }
+}
+
+/* ---------- Рендер карточек из JSON ---------- */
+async function loadProducts(url = "assets/data/products.json") {
+  const res = await fetch(url);
+  return await res.json();
+}
+
+function createProductCard(p, variant = "slider") {
+  // безопасные значения
+  const id = p?.id ?? "";
+  const title = p?.title ?? "";
+  const price = Number.isFinite(p?.price) ? p.price : 0;
+  const img = p?.img ?? "";
+  const href = p?.href || "/product.html?sku=" + encodeURIComponent(id);
+
+  const a = document.createElement("a");
+  a.className = `product-card product-card--${variant}`;
+  a.href = href;
+
+  // храним "сырой" объект для корзины
+  a.setAttribute(
+    "data-product",
+    JSON.stringify({ id, title, price, img, href, excerpt: p?.excerpt })
+  );
+
+  a.innerHTML = `
+    <div class="product-card__img">
+      <img src="${img}" alt="${title}">
+    </div>
+    <div class="product-card__title">${title}</div>
+    <button type="button" class="product-card__price" data-add-to-cart>
+      ${formatPrice(price)}
+    </button>
+  `;
+
+  // Ховер/фокус МЕНЯЕМ ТОЛЬКО НА КНОПКЕ (никаких слушателей на всей карточке)
+  const btn = a.querySelector("[data-add-to-cart]");
+  if (btn && isFinePointer) {
+    const orig = formatPrice(price);
+    const toAdd = () => {
+      btn.textContent = "Добавить";
+    };
+    const toPrice = () => {
+      btn.textContent = orig;
+    };
+
+    btn.addEventListener("mouseenter", toAdd);
+    btn.addEventListener("mouseleave", toPrice);
+    btn.addEventListener("focus", toAdd);
+    btn.addEventListener("blur", toPrice);
+  }
+
+  return a;
+}
+
+/* Вставка в слайды Swiper (пример для .popular-swiper) */
+async function renderPopularFromJson() {
+  const wrap = document.querySelector(".popular-swiper .swiper-wrapper");
+  if (!wrap) return;
+  const products = await loadProducts(); // если нужно, передай другой url
+  wrap.innerHTML = ""; // очистим
+  products.forEach((p) => {
+    const slide = document.createElement("div");
+    slide.className = "swiper-slide";
+    slide.appendChild(createProductCard(p, "slider"));
+    wrap.appendChild(slide);
+  });
+}
+/* Рендер каталога в .catalog__grid */
+async function renderCatalogFromJson(opts = {}) {
+  const {
+    url = "assets/data/products.json",
+    container = "#catalog-grid",
+    limit = null, // можно ограничить кол-во
+  } = opts;
+
+  const grid = document.querySelector(container);
+  if (!grid) return;
+
+  const products = await loadProducts(url);
+  const list = Array.isArray(products) ? products : [];
+  grid.innerHTML = "";
+
+  (limit ? list.slice(0, limit) : list).forEach((p) => {
+    const card = createProductCard(p, "catalog"); // <— модификатор для каталога
+    // модификатор просто влияет на высоту картинки через CSS
+    card.classList.add("product-card--catalog");
+
+    const cell = document.createElement("div");
+    // если нужна обертка-колонка — можно не делать, сетка и так раскладывает
+    cell.appendChild(card);
+    grid.appendChild(cell);
+  });
+}
+
+/* ---------- localStorage корзина по клику на цену ---------- */
+function addToCart(item) {
+  const key = "cart";
+  const cart = JSON.parse(localStorage.getItem(key) || "[]");
+  // Простейшая логика: если уже есть — увеличим qty, иначе добавим
+  const idx = cart.findIndex((x) => x.id === item.id);
+  if (idx >= 0) cart[idx].qty = (cart[idx].qty || 1) + 1;
+  else
+    cart.push({
+      id: item.id,
+      title: item.title,
+      price: item.price,
+      img: item.img,
+      excerpt: item.excerpt,
+      qty: 1,
+    });
+  localStorage.setItem(key, JSON.stringify(cart));
+}
+
+document.addEventListener("click", (e) => {
+  const btn = e.target.closest("[data-add-to-cart]");
+  if (!btn) return;
+
+  const card = btn.closest(".product-card");
+  if (!card) return;
+
+  let data = {};
+  try {
+    data = JSON.parse(card.getAttribute("data-product") || "{}");
+  } catch {
+    /* noop */
+  }
+
+  if (!data || !data.id) return;
+
+  addToCart(data);
+
+  // Микро-отклик
+  btn.style.transform = "scale(0.98)";
+  setTimeout(() => {
+    btn.style.transform = "";
+  }, 120);
+
+  // Предотвратим переход по ссылке при клике на кнопку
+  e.preventDefault();
+  e.stopPropagation();
+});
+
+/* ===== Toast ===== */
+function ensureToastHost() {
+  let host = document.getElementById("toast-root");
+  if (!host) {
+    host = document.createElement("div");
+    host.id = "toast-root";
+    host.setAttribute("role", "status");
+    host.setAttribute("aria-live", "polite");
+    document.body.appendChild(host);
+  }
+  return host;
+}
+
+function showToast(text) {
+  const host = ensureToastHost();
+  const el = document.createElement("div");
+  el.className = "toast";
+  el.textContent = text;
+  host.appendChild(el);
+  requestAnimationFrame(() => el.classList.add("is-open"));
+  // автозакрытие
+  setTimeout(() => {
+    el.classList.remove("is-open");
+    el.addEventListener("transitionend", () => el.remove(), { once: true });
+  }, 2400);
+}
+
+/* ===== Cart indicator ===== */
+function getCartCount() {
+  try {
+    const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+    return cart.reduce((s, x) => s + (x.qty || 1), 0);
+  } catch {
+    return 0;
+  }
+}
+
+function updateCartIndicator() {
+  const el = document.querySelector(".cart-indicator");
+  if (!el) return;
+  const n = getCartCount();
+  el.textContent = n > 0 ? String(n) : "";
+  el.classList.toggle("is-visible", n > 0);
+}
+
+/* при старте страницы синхронизируем индикатор */
+document.addEventListener("DOMContentLoaded", updateCartIndicator);
+
+/* ===== Переопределим addToCart, чтобы возвращать счётчик ===== */
+function addToCart(item) {
+  const key = "cart";
+  const cart = JSON.parse(localStorage.getItem(key) || "[]");
+  const idx = cart.findIndex((x) => x.id === item.id);
+  if (idx >= 0) cart[idx].qty = (cart[idx].qty || 1) + 1;
+  else
+    cart.push({
+      id: item.id,
+      title: item.title,
+      price: item.price,
+      img: item.img,
+      excerpt: item.excerpt,
+      qty: 1,
+    });
+  localStorage.setItem(key, JSON.stringify(cart));
+  return cart.reduce((s, x) => s + (x.qty || 1), 0); // ← вернём общее кол-во
+}
+
+/* ===== Делегирование клика по кнопке "в корзину" — ДОПОЛНИМ ОТКЛИКОМ ===== */
+document.addEventListener("click", (e) => {
+  const btn = e.target.closest("[data-add-to-cart]");
+  if (!btn) return;
+
+  const card = btn.closest(".product-card");
+  if (!card) return;
+
+  let data = {};
+  try {
+    data = JSON.parse(card.getAttribute("data-product") || "{}");
+  } catch {}
+
+  if (!data || !data.id) return;
+
+  const count = addToCart(data);
+
+  // Визуальный отклик на кнопке
+  const prevHTML = btn.innerHTML;
+  btn.classList.add("is-added");
+  btn.innerHTML = "Добавлено&nbsp;✓";
+
+  // микропружинка
+  btn.style.transform = "scale(0.98)";
+  setTimeout(() => {
+    btn.style.transform = "";
+  }, 120);
+
+  // вернуть исходную цену через 1200 мс
+  clearTimeout(btn._restoreTimer);
+  btn._restoreTimer = setTimeout(() => {
+    btn.classList.remove("is-added");
+    btn.innerHTML = prevHTML;
+  }, 1200);
+
+  // Тост и индикатор
+  showToast(`«${data.title}» добавлен в корзину`);
+  updateCartIndicator();
+
+  e.preventDefault();
+  e.stopPropagation();
+});

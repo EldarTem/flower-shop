@@ -1,0 +1,34 @@
+[
+  {
+    "id": "sku-001",
+    "title": "Роза кустовая, 12 шт, Голландия",
+    "price": 7500,
+    "img": "assets/images/index/g140.png",
+    "href": "/product.html?sku=sku-001",
+    "excerpt": "Нежная кустовая роза, 12 шт"
+  },
+  {
+    "id": "sku-002",
+    "title": "Роза Голландская, 150 шт",
+    "price": 12900,
+    "img": "assets/images/index/g59.png",
+    "href": "/product.html?sku=sku-002",
+    "excerpt": "Классический букет, крупные бутоны"
+  },
+  {
+    "id": "sku-003",
+    "title": "Роза пионовидная, кустовая, 50 шт",
+    "price": 9600,
+    "img": "assets/images/index/g52.png",
+    "href": "/product.html?sku=sku-003",
+    "excerpt": "Воздушная текстура, насыщенный аромат"
+  },
+  {
+    "id": "sku-004",
+    "title": "Хризантемы белые, 3 шт",
+    "price": 900,
+    "img": "assets/images/index/g45.png",
+    "href": "/product.html?sku=sku-004",
+    "excerpt": "Мини-букет для небольшого повода"
+  }
+]
