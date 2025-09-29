@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Информация — Roses from Edem</title>
+
+    <link rel="stylesheet" href="assets/css/base.css" />
+    <link rel="stylesheet" href="assets/css/style.css" />
+    <link rel="stylesheet" href="assets/css/info.css" />
+    <link
+      rel="icon"
+      href="/assets/images/icons/favicon.svg"
+      type="image/svg+xml"
+    />
+  </head>
+  <body>
+    <!-- header -->
+    <div id="header-placeholder"></div>
+
+    <main class="container info">
+      <h1 class="info__title">Информация</h1>
+      <p class="info__subtitle">
+        Доставка цветов <span class="nowrap">Roses from Edem</span>
+      </p>
+
+      <!-- Навигация по разделам (капсула) -->
+      <nav class="info-nav" aria-label="Разделы">
+        <a class="info-chip is-active" href="#delivery">Доставка</a>
+        <a class="info-chip" href="#pricing">Стоимость</a>
+        <a class="info-chip" href="#terms">Условия</a>
+        <a class="info-chip" href="#pickup">Самовывоз</a>
+        <a class="info-chip" href="#discounts">Скидки</a>
+        <a class="info-chip" href="#payment">Оплата/гарантии</a>
+        <a class="info-chip" href="#faq">FAQ</a>
+      </nav>
+
+      <!-- Доставка -->
+      <section id="delivery" class="info-block">
+        <h2 class="info-block__title">Круглосуточная доставка</h2>
+
+        <div class="info-block__grid">
+          <div class="info-card">
+            <h3 class="info-card__title">Интервалы</h3>
+            <ul class="ul">
+              <li>Точный час (по согласованию).</li>
+              <li>2-часовой интервал (например, 14:00–16:00).</li>
+              <li>4-часовой интервал (например, 10:00–14:00).</li>
+            </ul>
+          </div>
+
+          <div class="info-card">
+            <h3 class="info-card__title">Сроки</h3>
+            <p>
+              Доставляем как можно быстрее; время зависит от загруженности и
+              погоды. Для сложных композиций — согласуем индивидуально.
+            </p>
+          </div>
+
+          <div class="info-card">
+            <h3 class="info-card__title">Зона доставки</h3>
+            <p>Симферополь и пригороды, города Крыма — по договорённости.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Стоимость -->
+      <section id="pricing" class="info-block">
+        <h2 class="info-block__title">Стоимость доставки</h2>
+        <div class="price-table">
+          <div class="price-row">
+            <div class="price-what">Симферополь</div>
+            <div class="price-how">от 250 ₽</div>
+          </div>
+          <div class="price-row">
+            <div class="price-what">Пригород / другие города</div>
+            <div class="price-how">
+              по расстоянию (уточняйте у администратора)
+            </div>
+          </div>
+          <div class="price-note">
+            Повторная доставка (если курьер не застал получателя) — 250 ₽.
+          </div>
+        </div>
+      </section>
+
+      <!-- Условия -->
+      <section id="terms" class="info-block">
+        <h2 class="info-block__title">Условия доставки</h2>
+        <ul class="ul">
+          <li>
+            Звоним получателю перед поездкой (по желанию — «сюрприз» без
+            звонка).
+          </li>
+          <li>
+            Если адрес/время изменились — сообщите заранее, мы скорректируем
+            маршрут.
+          </li>
+          <li>
+            В пиковые даты и при сложной дорожной обстановке окна доставки могут
+            сдвигаться — заранее предупредим.
+          </li>
+        </ul>
+      </section>
+
+      <!-- Самовывоз -->
+      <section id="pickup" class="info-block">
+        <h2 class="info-block__title">Самовывоз</h2>
+        <p>
+          г. Симферополь, пер. Карьерный, д. 15/28а. Самовывоз по
+          предварительному заказу.
+        </p>
+        <a class="btn btn--ghost" href="tel:+79785455455">+7 (978) 545-54-55</a>
+      </section>
+
+      <!-- Скидки -->
+      <section id="discounts" class="info-block">
+        <h2 class="info-block__title">Накопительная система скидок</h2>
+        <ul class="ul">
+          <li>5% — после 3 заказов.</li>
+          <li>10% — после 7 заказов.</li>
+          <li>Индивидуальные условия для корпоративных клиентов.</li>
+        </ul>
+      </section>
+
+      <!-- Оплата/гарантии -->
+      <section id="payment" class="info-block">
+        <h2 class="info-block__title">Оплата и гарантии</h2>
+        <div class="info-block__grid">
+          <div class="info-card">
+            <h3 class="info-card__title">Способы оплаты</h3>
+            <ul class="ul">
+              <li>Онлайн-оплата.</li>
+              <li>Наличными при получении.</li>
+              <li>Безналичный расчёт (по запросу).</li>
+            </ul>
+          </div>
+          <div class="info-card">
+            <h3 class="info-card__title">Гарантия свежести</h3>
+            <p>
+              Работаем только со свежими цветами. Если что-то не понравилось —
+              сообщите в течение суток, заменим букет или вернём деньги.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- FAQ -->
+      <section id="faq" class="info-block">
+        <h2 class="info-block__title">Частые вопросы</h2>
+
+        <details class="faq">
+          <summary class="faq__q">
+            Можно ли доставить без звонка получателю?
+          </summary>
+          <div class="faq__a">
+            Да, укажите «сюрприз», курьер подъедет в указанный интервал и
+            аккуратно уточнит у охраны/администратора.
+          </div>
+        </details>
+
+        <details class="faq">
+          <summary class="faq__q">Что, если получателя нет на месте?</summary>
+          <div class="faq__a">
+            Согласуем новое время. Повторная доставка по городу — 250 ₽.
+          </div>
+        </details>
+
+        <details class="faq">
+          <summary class="faq__q">
+            Можно ли прикрепить открытку/фотоотчёт?
+          </summary>
+          <div class="faq__a">
+            Да, открытка — бесплатно; фотоотчёт — по запросу перед или после
+            вручения.
+          </div>
+        </details>
+      </section>
+    </main>
+    <button id="to-top" class="to-top" type="button" aria-label="Наверх">
+      <!-- иконка-стрелка -->
+      <img src="assets/images/icons/arrowLeft.svg" alt="" />
+    </button>
+    <!-- footer -->
+    <div id="footer-placeholder"></div>
+
+    <script src="assets/js/main.js"></script>
+  </body>
+</html>

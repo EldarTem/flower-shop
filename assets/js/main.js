@@ -33,6 +33,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   initPopularSwiper?.();
   initMegaMenu?.();
   initMobileNav?.(); // если используешь
+  initBackToTop();
 });
 
 // --- Вставка частичных шаблонов ---
@@ -109,7 +110,7 @@ const MEGA_MENUS = {
       divided: false,
       items: [
         { label: "Авторские", href: "/catalog.html" },
-        { label: "На вкус флориста", href: "/catalog.html" },
+        { label: "На вкус флориста", href: "/custom-bouquet.html" },
         { label: "Гиганты", href: "/catalog.html" },
         { label: "101 роза", href: "/catalog.html" },
         { label: "Свадебные букеты", href: "/catalog.html" },
@@ -842,3 +843,65 @@ document.addEventListener("click", (e) => {
   e.preventDefault();
   e.stopPropagation();
 });
+
+function initBackToTop() {
+  let btn = document.getElementById("to-top");
+  if (!btn) {
+    btn = document.createElement("button");
+    btn.id = "to-top";
+    btn.className = "to-top";
+    btn.type = "button";
+    btn.setAttribute("aria-label", "Наверх");
+    btn.innerHTML =
+      '<svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5l7 7-1.4 1.4L13 10.8V19h-2v-8.2l-4.6 4.6L5 12z" fill="currentColor"/></svg>';
+    document.body.appendChild(btn);
+  }
+
+  // показать, когда ниже первого экрана
+  const showThreshold = () => window.scrollY > window.innerHeight;
+  const updateVisibility = () => {
+    btn.classList.toggle("is-visible", showThreshold());
+  };
+
+  // лёгкий троттлинг скролла
+  let ticking = false;
+  window.addEventListener(
+    "scroll",
+    () => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          updateVisibility();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    },
+    { passive: true }
+  );
+
+  // первичная установка
+  updateVisibility();
+  window.addEventListener("resize", updateVisibility);
+
+  // клик — плавно вверх (учитываем reduce-motion)
+  btn.addEventListener("click", () => {
+    const preferReduce = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+    if ("scrollBehavior" in document.documentElement.style && !preferReduce) {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } else {
+      // фолбэк ручной плавности
+      const start = window.scrollY || document.documentElement.scrollTop;
+      const dur = 600;
+      const ease = (t) =>
+        t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+      const t0 = performance.now();
+      requestAnimationFrame(function raf(now) {
+        const p = Math.min(1, (now - t0) / dur);
+        window.scrollTo(0, Math.round(start * (1 - ease(p))));
+        if (p < 1) requestAnimationFrame(raf);
+      });
+    }
+  });
+}

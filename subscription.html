@@ -193,39 +193,199 @@
     <!-- footer -->
     <div id="footer-placeholder"></div>
 
+    <button id="to-top" class="to-top" type="button" aria-label="Наверх">
+      <!-- иконка-стрелка -->
+      <img src="assets/images/icons/arrowLeft.svg" alt="" />
+    </button>
+    <!-- Footer partial -->
+    <div id="footer-placeholder"></div>
+
+    <script src="assets/libs/swiper/swiper-bundle.min.js"></script>
     <script src="assets/js/main.js"></script>
+    <script src="assets/js/cart.js"></script>
     <script>
-      // Подсветка активного чипа и плавный скролл
-      (function () {
+      /* ===== Плавный скролл для чипов ===== */
+      function smoothScrollTo(targetY, duration = 700) {
+        const startY = window.scrollY || document.documentElement.scrollTop;
+        const diff = targetY - startY;
+        if (Math.abs(diff) < 2) return;
+        const ease = (t) =>
+          t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+        const t0 = performance.now();
+        requestAnimationFrame(function raf(now) {
+          const p = Math.min(1, (now - t0) / duration);
+          window.scrollTo(0, startY + diff * ease(p));
+          if (p < 1) requestAnimationFrame(raf);
+        });
+      }
+
+      /* ===== Навигация-чипы: клик + автоподсветка ===== */
+      (function initSubsChips() {
         const chips = [...document.querySelectorAll(".subs-nav .chip")];
+        if (!chips.length) return;
+
         chips.forEach((chip) => {
           chip.addEventListener("click", (e) => {
             const id = chip.getAttribute("href");
             const target = document.querySelector(id);
             if (!target) return;
             e.preventDefault();
-            target.scrollIntoView({ behavior: "smooth", block: "start" });
-            chips.forEach((c) => c.classList.remove("is-active"));
-            chip.classList.add("is-active");
+            history.pushState(null, "", id);
+            chips.forEach((c) => c.classList.toggle("is-active", c === chip));
+            const top =
+              target.getBoundingClientRect().top + window.scrollY - 16;
+            smoothScrollTo(top, 700);
           });
         });
 
-        // Автоподсветка при прокрутке
         const sections = [...document.querySelectorAll(".sub-block")];
         const io = new IntersectionObserver(
           (entries) => {
-            const visible = entries
+            const vis = entries
               .filter((en) => en.isIntersecting)
               .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
-            if (!visible) return;
-            const id = "#" + visible.target.id;
+            if (!vis) return;
+            const id = "#" + vis.target.id;
             chips.forEach((c) =>
               c.classList.toggle("is-active", c.getAttribute("href") === id)
             );
+            history.replaceState(null, "", id);
           },
-          { threshold: [0.4, 0.6] }
+          { threshold: [0.5] }
         );
         sections.forEach((s) => io.observe(s));
+      })();
+
+      /* ===== Телефон: прогрессивная маска + валидация ===== */
+      (function initPhoneMask() {
+        const forms = [...document.querySelectorAll(".sub-form")];
+        if (!forms.length) return;
+
+        const digitsOnly = (v) => (v || "").replace(/\D+/g, "");
+
+        // Нормализация под РФ для live-форматирования:
+        // всегда считаем, что страна = 7, 8 -> 7, остальное идёт как "остальные 10"
+        function normalizeForFormat(raw) {
+          let d = digitsOnly(raw);
+          if (!d) return "";
+          if (d[0] === "8") d = d.slice(1); // отбрасываем 8
+          if (d[0] === "7") d = d.slice(1); // убираем 7 из тела номера
+          return ("7" + d).slice(0, 11); // 7 + до 10 цифр
+        }
+
+        // Форматируем постепенно: +7, +7 (9, +7 (97, ... +7 (978) 8, ... +7 (978) 897-5, ...
+        function formatRuProgressive(normalized) {
+          if (!normalized) return "";
+          const c = normalized[0]; // всегда '7'
+          const rest = normalized.slice(1); // до 10 цифр
+          let out = "+" + c;
+          if (rest.length >= 1)
+            out += " (" + rest.slice(0, Math.min(3, rest.length));
+          if (rest.length >= 3) out += ")";
+          if (rest.length >= 4)
+            out += " " + rest.slice(3, Math.min(6, rest.length));
+          if (rest.length >= 6)
+            out += "-" + rest.slice(6, Math.min(8, rest.length));
+          if (rest.length >= 8)
+            out += "-" + rest.slice(8, Math.min(10, rest.length));
+          return out;
+        }
+
+        // Валидация: ровно 11 цифр общего номера и начинается на 7
+        function isValidFull(raw) {
+          let d = digitsOnly(raw);
+          if (!d) return false;
+          if (d[0] === "8") d = "7" + d.slice(1);
+          if (d[0] !== "7" && d.length === 10) d = "7" + d; // если ввели 10 цифр без 7
+          return d.length === 11 && d[0] === "7";
+        }
+
+        // UI-ошибки
+        function setError(input, msg) {
+          if (!input) return;
+          input.classList.add("input-error");
+          let hint = input.nextElementSibling;
+          if (!hint || !hint.classList.contains("form-error")) {
+            hint = document.createElement("div");
+            hint.className = "form-error";
+            input.insertAdjacentElement("afterend", hint);
+          }
+          hint.textContent = msg;
+        }
+        function clearError(input) {
+          if (!input) return;
+          input.classList.remove("input-error");
+          const hint = input.nextElementSibling;
+          if (hint && hint.classList.contains("form-error")) hint.remove();
+        }
+
+        forms.forEach((form) => {
+          const name = form.querySelector('input[name="name"]');
+          const phone = form.querySelector('input[name="phone"]');
+          const btn = form.querySelector('button[type="submit"]');
+          if (!phone) return;
+
+          // live-маска
+          function reformat() {
+            const norm = normalizeForFormat(phone.value);
+            phone.value = formatRuProgressive(norm); // скобки/дефисы появляются по мере ввода
+            clearError(phone);
+          }
+          phone.addEventListener("input", reformat);
+
+          // корректная вставка
+          phone.addEventListener("paste", (e) => {
+            e.preventDefault();
+            const text = (e.clipboardData || window.clipboardData).getData(
+              "text"
+            );
+            const norm = normalizeForFormat(text);
+            phone.value = formatRuProgressive(norm);
+          });
+
+          // на blur: если пусто — очищаем до "", если неполный — подсветим ошибку
+          phone.addEventListener("blur", () => {
+            clearError(phone);
+            if (!digitsOnly(phone.value)) {
+              phone.value = "";
+              return;
+            }
+            if (!isValidFull(phone.value))
+              setError(phone, "Введите номер в формате +7 (XXX) XXX-XX-XX");
+          });
+
+          // Сабмит (один! дубликатов нет)
+          form.addEventListener("submit", (e) => {
+            e.preventDefault();
+            clearError(name);
+            clearError(phone);
+
+            let ok = true;
+            if (!name?.value.trim()) {
+              setError(name, "Укажите имя");
+              ok = false;
+            }
+            if (!isValidFull(phone.value)) {
+              setError(phone, "Проверьте номер телефона");
+              ok = false;
+            }
+            if (!ok) return;
+
+            // имитация отправки
+            btn.disabled = true;
+            const prev = btn.textContent;
+            btn.textContent = "Отправляем…";
+
+            setTimeout(() => {
+              btn.disabled = false;
+              btn.textContent = prev;
+              form.reset();
+              showToast?.(
+                "Заявка отправлена. Мы свяжемся с вами в ближайшее время."
+              );
+            }, 900);
+          });
+        });
       })();
     </script>
   </body>

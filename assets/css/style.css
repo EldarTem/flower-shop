@@ -1322,33 +1322,71 @@ ul.social__list li.social__item {
   margin-bottom: 14px;
 }
 
-/* Чипы-навигации */
+/* ===== Segmented "капсула" (без бегунка) ===== */
 .subs-nav {
   display: flex;
   justify-content: center;
-  gap: 12px;
-  margin-bottom: 24px;
+  margin: 24px 0;
+  gap: 0; /* секции стыкуются */
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 6px; /* воздух вокруг капсулы */
 }
-.chip {
+.subs-nav .chip {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  height: 40px;
-  padding: 0 18px;
-  border-radius: 999px;
-  border: 1px solid #fff;
+  height: 56px;
+  padding: 0 36px;
+  font-size: 22px;
+  line-height: 1;
   color: #fff;
-  transition: background-color 0.2s ease, color 0.2s ease,
-    border-color 0.2s ease;
+
+  background: transparent;
+  border-top: 1px solid #fff;
+  border-bottom: 1px solid #fff;
+  border-right: 1px solid #fff; /* общий контур справа */
+  border-left: 0; /* левую рисуем только у первой */
+  transition: background-color 0.25s ease, color 0.25s ease,
+    border-color 0.25s ease;
 }
-.chip:hover,
-.chip.is-active {
+
+/* скругляем только края всей капсулы */
+.subs-nav .chip:first-child {
+  border-left: 1px solid #fff;
+  border-radius: 999px 0 0 999px;
+}
+.subs-nav .chip:last-child {
+  border-radius: 0 999px 999px 0;
+}
+
+/* тонкий разделитель между секциями (чтоб не было утолщения бордера) */
+.subs-nav .chip + .chip::before {
+  content: "";
+  position: absolute;
+  left: -1px;
+  top: 10px;
+  bottom: 10px;
+  width: 1px;
+  background: rgba(255, 255, 255, 0.55);
+  pointer-events: none;
+}
+
+/* hover / active — инверсия */
+.subs-nav .chip:hover,
+.subs-nav .chip.is-active {
   background: #fff;
   color: #000;
   border-color: #fff;
 }
+.subs-nav .chip:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
 
-/* Блок подписки */
+/* ===== Блоки подписки ===== */
 .sub-block {
   padding-block: 16px 40px;
 }
@@ -1395,7 +1433,7 @@ ul.social__list li.social__item {
 
 /* Текст и форма */
 .sub-block__content {
-  font-size: 18px;
+  font-size: 20px;
   line-height: 1.6;
 }
 .sub-block__content p + p {
@@ -1407,6 +1445,51 @@ ul.social__list li.social__item {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 12px 16px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+/* Ошибки формы и лучшая заметность инпутов-«пилюль» */
+.pill-input {
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.input-error {
+  border-color: #ff4d4f !important;
+  box-shadow: 0 0 0 2px rgba(255, 77, 79, 0.18);
+}
+.form-error {
+  color: #ff8080;
+  font-size: 14px;
+  margin-top: 4px;
+}
+
+/* ===== Адаптив ===== */
+@media (max-width: 960px) {
+  .subs-nav .chip {
+    height: 52px;
+    padding: 0 28px;
+    font-size: 20px;
+  }
+  .sub-block__grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  .sub-block--reverse .sub-block__media,
+  .sub-block--reverse .sub-block__content {
+    order: initial;
+  }
+}
+@media (max-width: 600px) {
+  .subs-nav {
+    padding: 4px;
+  }
+  .subs-nav .chip {
+    height: 46px;
+    padding: 0 22px;
+    font-size: 18px;
+  }
+  .sub-form {
+    grid-template-columns: 1fr;
+  }
 }
 
 .mnav-trigger {
@@ -1505,7 +1588,8 @@ ul.social__list li.social__item {
 .btn--xl {
   height: 46px;
   font-size: 18px;
-  grid-column: span 2;
+  grid-column: 2 / 3;
+  justify-self: stretch;
 }
 
 @media (max-width: 1200px) {
