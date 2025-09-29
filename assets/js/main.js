@@ -705,34 +705,7 @@ function addToCart(item) {
   localStorage.setItem(key, JSON.stringify(cart));
 }
 
-document.addEventListener("click", (e) => {
-  const btn = e.target.closest("[data-add-to-cart]");
-  if (!btn) return;
 
-  const card = btn.closest(".product-card");
-  if (!card) return;
-
-  let data = {};
-  try {
-    data = JSON.parse(card.getAttribute("data-product") || "{}");
-  } catch {
-    /* noop */
-  }
-
-  if (!data || !data.id) return;
-
-  addToCart(data);
-
-  // Микро-отклик
-  btn.style.transform = "scale(0.98)";
-  setTimeout(() => {
-    btn.style.transform = "";
-  }, 120);
-
-  // Предотвратим переход по ссылке при клике на кнопку
-  e.preventDefault();
-  e.stopPropagation();
-});
 
 /* ===== Toast ===== */
 function ensureToastHost() {
@@ -800,49 +773,6 @@ function addToCart(item) {
   localStorage.setItem(key, JSON.stringify(cart));
   return cart.reduce((s, x) => s + (x.qty || 1), 0); // ← вернём общее кол-во
 }
-
-/* ===== Делегирование клика по кнопке "в корзину" — ДОПОЛНИМ ОТКЛИКОМ ===== */
-document.addEventListener("click", (e) => {
-  const btn = e.target.closest("[data-add-to-cart]");
-  if (!btn) return;
-
-  const card = btn.closest(".product-card");
-  if (!card) return;
-
-  let data = {};
-  try {
-    data = JSON.parse(card.getAttribute("data-product") || "{}");
-  } catch {}
-
-  if (!data || !data.id) return;
-
-  const count = addToCart(data);
-
-  // Визуальный отклик на кнопке
-  const prevHTML = btn.innerHTML;
-  btn.classList.add("is-added");
-  btn.innerHTML = "Добавлено&nbsp;✓";
-
-  // микропружинка
-  btn.style.transform = "scale(0.98)";
-  setTimeout(() => {
-    btn.style.transform = "";
-  }, 120);
-
-  // вернуть исходную цену через 1200 мс
-  clearTimeout(btn._restoreTimer);
-  btn._restoreTimer = setTimeout(() => {
-    btn.classList.remove("is-added");
-    btn.innerHTML = prevHTML;
-  }, 1200);
-
-  // Тост и индикатор
-  showToast(`«${data.title}» добавлен в корзину`);
-  updateCartIndicator();
-
-  e.preventDefault();
-  e.stopPropagation();
-});
 
 function initBackToTop() {
   let btn = document.getElementById("to-top");

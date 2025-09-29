@@ -59,6 +59,7 @@
   border: 0; /* рамки у контейнера */
   font: inherit;
   transition: background-color 0.2s ease, color 0.2s ease;
+  cursor: pointer;
 }
 
 /* вертикальные разделители для 3-колоночной группы */
@@ -73,10 +74,10 @@
 }
 .seg--wrap .seg__btn:nth-child(-n + 4) {
   border-top: 0;
-} /* первый ряд без верхней линии */
+} /* первый ряд */
 .seg--wrap .seg__btn:nth-child(4n) {
   border-right: 0;
-} /* крайняя правая без правого бордера */
+} /* крайняя правая */
 
 .seg__btn:hover {
   background: rgba(255, 255, 255, 0.08);
@@ -98,21 +99,35 @@
   resize: vertical;
 }
 
-/* цена + qty + кнопка */
+/* ===== Цена + +/- + кнопка ===== */
+
+/* анти-скролл по оси X, если что-то шире экрана */
+html,
+body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
 .cb__row {
-  display: grid;
-  grid-template-columns: auto 1fr 1fr;
+  display: flex; /* один ряд: − цена + | Заказать */
   align-items: center;
   gap: 16px;
   margin-top: 8px;
+  min-width: 0; /* позволяет ужиматься внутри контейнера */
+  flex-direction: row-reverse;
+}
+.cb__row * {
+  min-width: 0;
 }
 
+/* порядок: минус -> цена -> плюс (DOM не меняем) */
 .qty {
-  display: inline-grid;
-  grid-auto-flow: column;
-  gap: 8px;
-  align-items: center;
+  display: contents;
 }
+.qty__val {
+  display: none;
+} /* счётчик скрываем — он не нужен */
+
 .qty__btn {
   width: 34px;
   height: 34px;
@@ -120,28 +135,54 @@
   border: 1px solid #fff;
   background: transparent;
   color: #fff;
+  line-height: 1;
+  flex: 0 0 34px; /* не сжимать */
 }
-.qty__val {
-  min-width: 28px;
-  text-align: center;
-  font-size: 18px;
+.qty [data-act="dec"] {
+  order: 1;
+}
+.cb__price {
+  order: 2;
+}
+.qty [data-act="inc"] {
+  order: 3;
 }
 
+/* блок цены (инпут создаётся скриптом вместо #cb-price span) */
 .cb__price {
-  justify-self: start;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+.cb__price-input {
+  box-sizing: border-box;
+  min-width: 116px;
+  padding: 10px 28px 10px 14px;
   border: 1px solid #fff;
   border-radius: 8px;
-  padding: 8px 14px;
-  font-size: 22px;
-  font-weight: 600;
+  background: transparent;
+  color: #fff;
+  font: inherit;
+  text-align: center;
+  outline: none;
+}
+/* символ ₽ — чтобы в инпуте оставить только цифры */
+.cb__price::after {
+  content: " ₽";
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: #fff;
 }
 
 /* кнопка справа */
 .cb__submit {
-  justify-self: end;
+  margin-left: auto;
 }
 
-/* адаптив */
+/* =====================  ADAPTIVE  ===================== */
 @media (max-width: 1024px) {
   .cb__grid {
     grid-template-columns: 1fr;
@@ -151,21 +192,64 @@
   }
   .seg--wrap {
     grid-template-columns: repeat(2, 1fr);
-  } /* 2x2 на планшете/мобиле */
-  .cb__row {
-    grid-template-columns: auto 1fr;
-  }
-  .cb__submit {
-    grid-column: 1 / -1;
-    justify-self: stretch;
-  }
+  } /* 2x2 */
 }
+
 @media (max-width: 600px) {
   .seg {
     grid-template-columns: 1fr 1fr;
-  } /* если места мало – 2 колонки */
+  } /* компактные сегменты */
+  .seg--wrap {
+    grid-template-columns: 1fr 1fr;
+  }
   .cb__title {
     font-size: 28px;
     letter-spacing: 1px;
+  }
+
+  .cb__row {
+    gap: 12px;
+    flex-wrap: wrap; /* без переноса: всё в одну строку */
+  }
+  .qty {
+    display: flex;
+  }
+  /* +/- компактнее на телефоне */
+  .cb__row .qty [data-act="dec"],
+  .cb__row .qty [data-act="inc"] {
+    width: 32px;
+    height: 32px;
+    flex: 0 0 32px;
+  }
+
+  /* цена — фиксированная ширина, не ломает ряд */
+
+  .cb__price-input {
+    min-width: 108px;
+    padding: 8px 26px 8px 12px;
+    font-size: 16px;
+  }
+  .cb__price::after {
+    right: 8px;
+  }
+
+  /* большая кнопка "Заказать" занимает оставшееся место */
+  .cb__submit {
+    flex: 1 1 auto;
+    min-width: 42%;
+    padding: 12px 18px;
+  }
+}
+
+/* телефоны пошире/планшеты в портрете */
+@media (min-width: 601px) and (max-width: 820px) {
+  .cb__row {
+    gap: 14px;
+  }
+  .cb__price-input {
+    min-width: 120px;
+  }
+  .cb__submit {
+    min-width: 44%;
   }
 }
