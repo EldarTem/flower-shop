@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Заказ оформлен — Roses from Edem</title>
+
+    <!-- ваши стили -->
+    <link rel="stylesheet" href="assets/css/base.css" />
+    <link rel="stylesheet" href="assets/css/style.css" />
+
+    <!-- стиль страницы успеха -->
+    <link rel="stylesheet" href="assets/css/success.css" />
+
+    <link
+      rel="icon"
+      href="/assets/images/icons/favicon.svg"
+      type="image/svg+xml"
+    />
+  </head>
+  <body>
+    <!-- Header partial -->
+    <div id="header-placeholder"></div>
+
+    <main class="container success">
+      <section class="success-card" aria-label="Заказ оформлен">
+        <figure class="success-media">
+          <!-- замени на свою картинку, ниже стоит фолбэк -->
+          <img
+            src="assets/images/woman-florist-her-own-floral-shop-taking-care-flowers.jpg"
+            alt="Наш флорист за работой"
+            onerror="this.src='assets/images/izobr/team.jpg'; this.onerror=null;"
+          />
+        </figure>
+
+        <div class="success-content">
+          <h1 class="success-title">Ваш заказ<br />успешно<br />оформлен!</h1>
+
+          <p class="success-lead">
+            В случае необходимости оператор<br />
+            вам позвонит для уточнения<br />
+            деталей заказа.
+          </p>
+
+          <p class="success-sign">
+            С уважением,<br />
+            команда Roses from Edem
+          </p>
+
+          <div class="success-actions">
+            <a class="btn btn--ghost" href="/catalog.html">Перейти в каталог</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer partial -->
+    <div id="footer-placeholder"></div>
+
+    <!-- ваши скрипты (нужен includePartials из main.js) -->
+    <script src="assets/js/main.js"></script>
+
+    <script>
+      // подставим header/footer
+      (async function mountPartials() {
+        try {
+          await includePartials?.();
+        } catch (_) {}
+      })();
+
+      // показать № заказа и сумму, если есть last_order из корзины
+      (function showOrderInfo() {
+        let order = null;
+        try {
+          order = JSON.parse(localStorage.getItem("last_order") || "null");
+        } catch {}
+        const params = new URLSearchParams(location.search);
+        const idFromQuery = params.get("order");
+
+        const $meta = document.getElementById("success-meta");
+        const $id = document.getElementById("order-id");
+        const $total = document.getElementById("order-total");
+
+        if ($id && (idFromQuery || order?.id)) {
+          $id.textContent = idFromQuery || order.id;
+        }
+        if ($total && order?.total != null) {
+          try {
+            $total.textContent =
+              new Intl.NumberFormat("ru-RU").format(order.total) + " ₽";
+          } catch {
+            $total.textContent = (order.total || 0) + " ₽";
+          }
+        }
+        if ((idFromQuery || order?.id) && order) $meta.hidden = false;
+      })();
+    </script>
+  </body>
+</html>

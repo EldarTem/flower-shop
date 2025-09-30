@@ -6,6 +6,10 @@
     <title>Roses from Edem</title>
 
     <!-- Стили -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
+    />
     <link rel="stylesheet" href="assets/css/base.css" />
     <link rel="stylesheet" href="assets/css/style.css" />
     <link rel="stylesheet" href="assets/libs/swiper/swiper-bundle.min.css" />
@@ -185,138 +189,14 @@
         </div>
       </div>
     </section>
-    <!-- Cart modal (можно положить в partials/cart.html и подставлять как хедер/футер) -->
-    <!-- Cart Modal -->
-    <div
-      id="cart-modal"
-      class="cart"
-      aria-hidden="true"
-      role="dialog"
-      aria-modal="true"
-    >
-      <div class="cart__backdrop" data-cart-close></div>
 
-      <div class="cart__sheet">
-        <button
-          class="cart__close"
-          type="button"
-          aria-label="Закрыть"
-          data-cart-close
-        >
-          ×
-        </button>
-        <h3 class="cart__title">ВАШ ЗАКАЗ</h3>
-
-        <!-- скроллируемая область списка -->
-        <div class="cart__scroll">
-          <!-- список товаров -->
-          <ul class="cart__list" id="cart-list">
-            <!-- рендер из JS -->
-          </ul>
-
-          <!-- Левая колонка -->
-
-          <!-- Правая колонка -->
-          <section class="cart__pane">
-            <h4 class="cart__section-title cart__section-title--total">
-              К оплате: <span id="cart-total">0 ₽</span>
-            </h4>
-
-            <!-- Способ оплаты (оставляем те же name/value) -->
-            <fieldset class="cart__pay cart__pay--cols">
-              <div class="cart-pay_block">
-                <label class="chk chk--lg">
-                  <input type="radio" name="pay" value="online" checked />
-                  <span>Онлайн</span>
-                </label>
-                <label class="chk chk--lg">
-                  <input type="radio" name="pay" value="cod" />
-                  <span>При получении</span>
-                </label>
-              </div>
-            </fieldset>
-
-            <!-- Контакты заказчика -->
-            <input
-              class="cart__input cart__input--lg"
-              name="name"
-              placeholder="Ваше имя"
-            />
-            <input
-              class="cart__input cart__input--lg"
-              name="phone"
-              placeholder="Телефон"
-            />
-
-            <p class="cart__note">
-              После отправки формы наши операторы свяжутся с вами для уточнения
-              деталей заказа.
-            </p>
-
-            <!-- Кнопка оформления (внизу контента, не фиксированная) -->
-            <button id="cart-submit" class="cart__submit" type="button">
-              Оформить заказ
-            </button>
-          </section>
-          <section class="cart__pane">
-            <h4 class="cart__section-title cart__section-title--sale">
-              Получатель заказа
-            </h4>
-            <input
-              class="cart__input cart__input--lg"
-              name="name"
-              placeholder="Имя получателя"
-            />
-            <input
-              class="cart__input cart__input--lg"
-              name="phone"
-              placeholder="Телефон получателя"
-            />
-            <!-- Способ оплаты (оставляем те же name/value) -->
-            <fieldset class="cart__pay cart__pay--sale cart__pay--cols">
-              <div class="cart-pay_block--sale">
-                <label class="chk chk--lg">
-                  <input type="radio" name="pay" value="online" checked />
-                  <span>Доставка</span>
-                </label>
-                <label class="chk chk--lg">
-                  <input type="radio" name="pay" value="cod" />
-                  <span>Самовывоз</span>
-                </label>
-              </div>
-            </fieldset>
-
-            <!-- Контакты заказчика -->
-            <input
-              class="cart__input cart__input--lg"
-              name="name"
-              placeholder="Ваше имя"
-            />
-            <input
-              class="cart__input cart__input--lg"
-              name="phone"
-              placeholder="Телефон"
-            />
-
-            <p class="cart__note">
-              После отправки формы наши операторы свяжутся с вами для уточнения
-              деталей заказа.
-            </p>
-
-            <!-- Кнопка оформления (внизу контента, не фиксированная) -->
-            <button id="cart-submit" class="cart__submit" type="button">
-              Оформить заказ
-            </button>
-          </section>
-        </div>
-      </div>
-    </div>
     <button id="to-top" class="to-top" type="button" aria-label="Наверх">
-      <!-- иконка-стрелка -->
       <img src="assets/images/icons/arrowLeft.svg" alt="" />
     </button>
     <!-- Footer partial -->
     <div id="footer-placeholder"></div>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ru.js"></script>
 
     <script src="assets/libs/swiper/swiper-bundle.min.js"></script>
     <script src="assets/js/main.js"></script>

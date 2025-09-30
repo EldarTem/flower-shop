@@ -55,6 +55,23 @@ async function includePartials() {
     const f = await fetch("partials/footer.html").then((r) => r.text());
     footerPh.outerHTML = f;
   }
+  if (!document.getElementById("cart-modal")) {
+    try {
+      const html = await fetch("partials/cart.html").then((r) => r.text());
+      const tmp = document.createElement("div");
+      tmp.innerHTML = html.trim();
+      const cartEl = tmp.firstElementChild;
+      if (cartEl) document.body.appendChild(cartEl);
+
+      // после монтирования — единоразовая привязка внутренних слушателей
+      bindCartModalOnce();
+      document.dispatchEvent(new CustomEvent("cart:mounted"));
+    } catch (e) {
+      console.warn("Не удалось подгрузить partials/cart.html", e);
+    }
+  }
+  // важно: чтобы твой код, который уже слушает это событие, отработал
+  document.dispatchEvent(new CustomEvent("partials:loaded"));
 }
 
 // --- Swiper: hero ---

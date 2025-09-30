@@ -122,29 +122,56 @@
     ind.textContent = count > 0 ? String(count) : "";
   }
 
-  // ---------- modal refs ----------
-  const modal = document.getElementById("cart-modal");
-  const listEl = modal ? modal.querySelector("#cart-list") : null;
-  const totalEl = modal ? modal.querySelector("#cart-total") : null;
-  const upsellEl = modal ? modal.querySelector("#cart-upsell") : null;
+  // ---------- lazy refs (важно при подгрузке partial) ----------
+  function getModal() {
+    return document.getElementById("cart-modal");
+  }
+  function getListEl() {
+    return getModal()?.querySelector("#cart-list");
+  }
+  function getTotalEl() {
+    return getModal()?.querySelector("#cart-total");
+  }
+  function getUpsellEl() {
+    return getModal()?.querySelector("#cart-upsell");
+  }
 
+  // единоразовая привязка внутренних слушателей модалки
+  function bindCartModalOnce() {
+    const modal = getModal();
+    if (!modal || modal.dataset.bound) return;
+    modal.dataset.bound = "1";
+
+    // закрыть по клику на фон/крестик
+    modal.addEventListener("click", (e) => {
+      if (e.target.matches("[data-cart-close], .cart__backdrop")) closeCart();
+    });
+
+    // закрыть по Esc
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") closeCart();
+    });
+  }
+
+  // ---------- open/close ----------
   function openCart() {
+    const modal = getModal();
     if (!modal) return;
     renderCart();
     modal.classList.add("is-open");
     document.documentElement.classList.add("no-scroll");
   }
   function closeCart() {
+    const modal = getModal();
     if (!modal) return;
     modal.classList.remove("is-open");
     document.documentElement.classList.remove("no-scroll");
   }
-  modal?.addEventListener("click", (e) => {
-    if (e.target.matches("[data-cart-close], .cart__backdrop")) closeCart();
-  });
 
-  // ---------- rendering from LS (без window.PRODUCTS) ----------
+  // ---------- rendering from LS ----------
   function renderCart() {
+    const listEl = getListEl();
+    const totalEl = getTotalEl();
     if (!listEl || !totalEl) return;
 
     const cart = getCart();
@@ -163,6 +190,7 @@
           <h4 class="cart__name">${row.title || "Товар"}</h4>
           ${row.excerpt ? `<p class="cart__meta">${row.excerpt}</p>` : ""}
           <div class="cart__ctrls">
+          <div>
             <div class="qty" data-id="${row.id}">
               <button class="qty__btn" data-act="dec" aria-label="Минус">−</button>
               <span class="qty__val">${row.qty}</span>
@@ -171,9 +199,11 @@
             <button class="cart__remove" data-remove="${
               row.id
             }" type="button">Удалить</button>
+            </div>
+             <div class="cart__price">${money(line)}</div>
           </div>
         </div>
-        <div class="cart__price">${money(line)}</div>
+       
       `;
       listEl.appendChild(li);
     });
@@ -182,22 +212,124 @@
     renderUpsell();
   }
 
-  // (опционально) апселл — можешь оставить пустым или заполнить как нужно
+  // (опционально) апселл
+  // === UPSell (статичный список) ===
+  const UPS_DATA = [
+    {
+      id: "add-001",
+      title: "Открытка с пожеланием",
+      price: 0,
+      img: "assets/images/izobr/cert-1-1.jpg",
+      href: "/addition.html?id=add-001",
+      excerpt: "Подпишем от руки",
+    },
+    {
+      id: "add-002",
+      title: "Транспортировочный бокс с водой",
+      price: 400,
+      img: "assets/images/izobr/cert-1.jpg",
+      href: "/addition.html?id=add-002",
+      excerpt: "Свежесть в дороге",
+    },
+    {
+      id: "add-003",
+      title: "Секатор",
+      price: 700,
+      img: "assets/images/izobr/cert-2-2.jpg",
+      href: "/addition.html?id=add-003",
+      excerpt: "Уход за цветами",
+    },
+    {
+      id: "add-004",
+      title: "Ваза стеклянная",
+      price: 1200,
+      img: "assets/images/izobr/cert-2.jpg",
+      href: "/addition.html?id=add-004",
+      excerpt: "Минималистичная",
+    },
+  ];
+
+  // создаём секцию при необходимости и рендерим карточки
   function renderUpsell() {
-    if (!upsellEl) return;
-    upsellEl.innerHTML = ""; // тут можно подставить произвольные товары
+    const modal = getModal?.() || document.getElementById("cart-modal");
+    if (!modal) return;
+
+    // секция
+    let host = modal.querySelector("#cart-upsell");
+    if (!host) {
+      const scroll = modal.querySelector(".cart__scroll") || modal;
+      host = document.createElement("section");
+      host.id = "cart-upsell";
+      host.className = "cart__upsell";
+      host.setAttribute("aria-label", "Дополнить заказ");
+      host.innerHTML = `
+      <h4 class="cart__section-title">Дополнить заказ</h4>
+      <div class="upsell__grid"></div>
+    `;
+      const list = modal.querySelector("#cart-list");
+      (list?.parentNode === scroll ? list : scroll).insertAdjacentElement(
+        "afterend",
+        host
+      );
+    }
+
+    const grid = host.querySelector(".upsell__grid");
+    if (!grid) return;
+
+    grid.innerHTML = "";
+    UPS_DATA.forEach((p) => {
+      const payload = {
+        id: String(p.id),
+        title: String(p.title),
+        price: Number(p.price) || 0,
+        img: String(p.img || ""),
+        excerpt: String(p.excerpt || ""),
+      };
+      const card = document.createElement("div");
+      card.className = "upsell-card";
+      card.innerHTML = `
+      <div class="upsell-card__img"><img src="${payload.img}" alt="${
+        payload.title
+      }"></div>
+      <div class="upsell-card__title">${payload.title}</div>
+      <button class="upsell-card__btn" type="button" data-add='${JSON.stringify(
+        payload
+      ).replace(/'/g, "&#39;")}'>
+        ${money(payload.price)}
+      </button>
+    `;
+      grid.appendChild(card);
+    });
+
+    host.style.display = ""; // всегда показываем
   }
-  upsellEl?.addEventListener("click", (e) => {
+  // клик по кнопке «цена» в апселле (внутри модалки)
+  document.addEventListener("click", (e) => {
+    const modal = document.getElementById("cart-modal");
+    if (!modal || !modal.contains(e.target)) return;
     const btn = e.target.closest("[data-add]");
     if (!btn) return;
-    // здесь ожидается полный объект; если будет только id — дополни сам
+
+    try {
+      const item = JSON.parse(btn.getAttribute("data-add") || "{}");
+      if (item && item.id) {
+        addItemToCart(item, 1);
+        showToast(`«${item.title}» добавлен в корзину`);
+        renderCart?.(); // перерисуем список и сумму
+        updateCartBadge?.();
+      }
+    } catch {}
   });
 
-  // qty +/- и удаление
-  listEl?.addEventListener("click", (e) => {
+  // Делегирование кликов ВНУТРИ модалки (qty/удаление/апселл)
+  document.addEventListener("click", (e) => {
+    const modal = getModal();
+    if (!modal || !modal.contains(e.target)) return;
+
     const dec = e.target.closest('[data-act="dec"]');
     const inc = e.target.closest('[data-act="inc"]');
     const rm = e.target.closest("[data-remove]");
+    const ups = e.target.closest("[data-add]");
 
     if (dec || inc) {
       const wrap = e.target.closest(".qty");
@@ -209,10 +341,12 @@
       removeFromCart(rm.dataset.remove);
       renderCart();
       updateCartBadge();
+    } else if (ups) {
+      // обработка апселла по необходимости
     }
   });
 
-  // ---------- delegated clicks ----------
+  // ---------- delegated clicks (страница) ----------
   function getItemFromCard(btn) {
     const card = btn.closest(".product-card");
     if (!card) return null;
@@ -267,7 +401,6 @@
       // защита от повторной обработки этим же событием
       if (btn.dataset.cartHandled === "1") return;
       btn.dataset.cartHandled = "1";
-      // сбросим флажок после текущего стека вызовов
       setTimeout(() => {
         btn.dataset.cartHandled = "";
       }, 0);
@@ -295,7 +428,7 @@
       updateCartBadge();
 
       e.preventDefault();
-      e.stopImmediatePropagation(); // жёстко останавливаем другие click-слушатели
+      e.stopImmediatePropagation();
     });
 
     // держим бэйдж в актуальном состоянии
@@ -305,13 +438,235 @@
   // ---------- init ----------
   function initCartUI() {
     bindDelegatedOnce();
+    bindCartModalOnce(); // важно при подгрузке partial
     updateCartBadge();
   }
 
   document.addEventListener("DOMContentLoaded", initCartUI);
-  // после includePartials триггерим повторную синхронизацию
+  // после includePartials/подключения cart.html
   document.addEventListener("partials:loaded", initCartUI);
+  document.addEventListener("cart:mounted", initCartUI);
 
   // ---- экспорт (по желанию) ----
   window.Cart = { open: openCart, render: renderCart, badge: updateCartBadge };
+})();
+
+(function mountPickers() {
+  function init() {
+    if (!window.flatpickr) return;
+
+    // DATE
+    const dateInput = document.querySelector('input[name="delivery_date"]');
+    if (dateInput) {
+      flatpickr(dateInput, {
+        locale: flatpickr.l10ns.ru,
+        dateFormat: "d.m.Y",
+        minDate: "today",
+        disableMobile: true, // <— ключевой флаг!
+        onOpen: () =>
+          dateInput.closest(".picker-wrap")?.classList.add("is-open"),
+        onClose: () =>
+          dateInput.closest(".picker-wrap")?.classList.remove("is-open"),
+      });
+    }
+
+    // TIME
+    const timeInput = document.querySelector('input[name="delivery_time"]');
+    if (timeInput) {
+      flatpickr(timeInput, {
+        enableTime: true,
+        noCalendar: true,
+        time_24hr: true,
+        minuteIncrement: 5,
+        dateFormat: "H:i",
+        disableMobile: true, // <— тоже важно
+        onOpen: () =>
+          timeInput.closest(".picker-wrap")?.classList.add("is-open"),
+        onClose: () =>
+          timeInput.closest(".picker-wrap")?.classList.remove("is-open"),
+      });
+    }
+  }
+
+  // когда страница готова
+  document.addEventListener("DOMContentLoaded", init);
+  // когда partials и модалка подгружены
+  document.addEventListener("cart:mounted", init);
+  document.addEventListener("partials:loaded", init);
+})();
+
+// open на focus/click
+// === Стрелка у select "Город доставки" ===
+(() => {
+  const WRAP = ".cart__select-wrap";
+  const SEL = ".cart__select";
+  const OPEN = "is-open";
+
+  // ОТКРЫТЬ: при фокусе или mousedown по самому select
+  document.addEventListener("focusin", (e) => {
+    if (e.target.matches(SEL)) {
+      e.target.closest(WRAP)?.classList.add(OPEN);
+    }
+  });
+  document.addEventListener("mousedown", (e) => {
+    const sel = e.target.closest(SEL);
+    if (sel) sel.closest(WRAP)?.classList.add(OPEN);
+  });
+
+  // ЗАКРЫТЬ: когда значение выбрано (change) или фокус ушёл (blur)
+  document.addEventListener(
+    "change",
+    (e) => {
+      if (e.target.matches(SEL)) {
+        e.target.closest(WRAP)?.classList.remove(OPEN);
+      }
+    },
+    true
+  ); // capture — надёжнее в Safari
+  document.addEventListener(
+    "blur",
+    (e) => {
+      if (e.target.matches(SEL)) {
+        e.target.closest(WRAP)?.classList.remove(OPEN);
+      }
+    },
+    true
+  );
+
+  // ЗАКРЫТЬ: клик-вне и Esc
+  document.addEventListener("mousedown", (e) => {
+    if (!e.target.closest(WRAP)) {
+      document
+        .querySelectorAll(`${WRAP}.${OPEN}`)
+        .forEach((w) => w.classList.remove(OPEN));
+    }
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+      document
+        .querySelectorAll(`${WRAP}.${OPEN}`)
+        .forEach((w) => w.classList.remove(OPEN));
+    }
+  });
+})();
+
+// ==== Fake checkout: отправка + редирект на success ====
+(() => {
+  const CART_KEY = "cart";
+  let bound = false;
+
+  function bindOnce() {
+    if (bound) return;
+    const modal = document.getElementById("cart-modal");
+    const btn = modal?.querySelector("#cart-submit");
+    if (!btn) return;
+
+    bound = true;
+    btn.addEventListener("click", async () => {
+      const cart = safeReadCart();
+      if (!cart.length) {
+        alert("Корзина пуста. Добавьте товары.");
+        return;
+      }
+
+      // собираем форму
+      const m = document.getElementById("cart-modal");
+      const getVal = (sel) => m.querySelector(sel)?.value?.trim() || "";
+      const getRadio = (name) =>
+        m.querySelector(`input[name="${name}"]:checked`)?.value || "";
+
+      const order = {
+        id: makeOrderId(),
+        createdAt: new Date().toISOString(),
+        payMethod: getRadio("pay") || "online",
+        deliveryType: getRadio("delivery") || "delivery",
+        recipient: {
+          name: getVal('input[name="recipient_name"]'),
+          phone: getVal('input[name="recipient_phone"]'),
+        },
+        customer: {
+          name: getVal('input[name="customer_name"]'),
+          phone: getVal('input[name="customer_phone"]'),
+        },
+        schedule: {
+          date: getVal('input[name="delivery_date"]'),
+          time: getVal('input[name="delivery_time"]'),
+          city: getVal('select[name="city"]'),
+          address: getVal('textarea[name="address"]'),
+        },
+        items: cart.map(({ id, title, price, img, qty }) => ({
+          id,
+          title,
+          price,
+          img,
+          qty,
+        })),
+        total: cart.reduce(
+          (s, r) => s + (Number(r.price) || 0) * (r.qty || 1),
+          0
+        ),
+      };
+
+      // простая валидация
+      if (!order.customer.phone && !order.recipient.phone) {
+        alert("Укажите телефон заказчика или получателя.");
+        return;
+      }
+
+      // UI: блокируем кнопку и имитируем отправку
+      const btn = m.querySelector("#cart-submit");
+      const prev = btn.innerHTML;
+      btn.disabled = true;
+      btn.classList.add("is-loading");
+      btn.innerHTML = "Отправляем…";
+
+      try {
+        // имитация сети (1.2 сек)
+        await new Promise((r) => setTimeout(r, 1200));
+
+        // сохраним «последний заказ» — можно показать на success
+        try {
+          localStorage.setItem("last_order", JSON.stringify(order));
+        } catch {}
+
+        // очистим корзину
+        try {
+          localStorage.setItem(CART_KEY, "[]");
+          document.dispatchEvent(new CustomEvent("cart:change"));
+        } catch {}
+
+        // редирект
+        const q = new URLSearchParams({ order: order.id }).toString();
+        location.href = "/success.html?" + q;
+      } catch (e) {
+        console.warn("Ошибка имитации отправки", e);
+        alert("Не удалось отправить заказ. Попробуйте ещё раз.");
+        btn.disabled = false;
+        btn.classList.remove("is-loading");
+        btn.innerHTML = prev;
+      }
+    });
+  }
+
+  function safeReadCart() {
+    try {
+      const raw = JSON.parse(localStorage.getItem(CART_KEY) || "[]");
+      return Array.isArray(raw) ? raw : [];
+    } catch {
+      return [];
+    }
+  }
+  function makeOrderId() {
+    return (
+      "R" +
+      Math.random().toString(36).slice(2, 5).toUpperCase() +
+      "-" +
+      Date.now().toString(36).slice(-6).toUpperCase()
+    );
+  }
+
+  // привязка в нужные моменты жизненного цикла
+  document.addEventListener("DOMContentLoaded", bindOnce);
+  document.addEventListener("partials:loaded", bindOnce);
+  document.addEventListener("cart:mounted", bindOnce);
 })();

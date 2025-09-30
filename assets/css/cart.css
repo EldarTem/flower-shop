@@ -44,8 +44,6 @@
   flex-direction: column;
   overflow: hidden;
   padding: 28px 28px 22px;
-
-  /* slide-up на десктопе */
   transform: translate(-50%, calc(-50% + 24px));
   opacity: 0;
   transition: transform 0.36s cubic-bezier(0.22, 0.9, 0.22, 1),
@@ -86,11 +84,9 @@
 
 /* Скроллируемая часть (без видимого скроллбара) */
 .cart__scroll {
-  flex: 1; /* занять всё оставшееся место по высоте */
-  min-height: 0; /* чтобы overflow работал внутри flex-контейнера */
+  flex: 1;
+  min-height: 0;
   overflow: auto;
-
-  /* скрыть полосу прокрутки, но оставить сам скролл */
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* IE/старый Edge */
 }
@@ -108,7 +104,7 @@
 }
 .cart__item {
   display: grid;
-  grid-template-columns: 130px 1fr auto;
+  grid-template-columns: 130px 1fr;
   gap: 18px 22px;
   align-items: center;
   padding: 18px 6px;
@@ -152,6 +148,7 @@
   align-items: center;
   gap: 12px;
   margin-top: 6px;
+  justify-content: space-between; /* из ранней версии — сохраняем поведение каскада */
 }
 .qty {
   display: inline-flex;
@@ -187,7 +184,6 @@
   text-align: center;
   font-weight: 600;
 }
-
 .cart__remove {
   appearance: none;
   -webkit-appearance: none;
@@ -214,109 +210,100 @@
   margin-left: 8px;
 }
 
-/* ИТОГО */
+/* ====== TOTAL + PAY (row) ====== */
 .cart__total {
+  display: flex;
+  align-items: center; /* поздняя версия */
+  justify-content: space-between; /* поздняя версия */
+  gap: 24px; /* поздняя версия */
+  padding: 8px 6px 0; /* поздняя версия */
   border-top: 1px solid #eee;
   margin-top: 10px;
-  padding: 16px 6px 8px;
-  display: flex;
-  justify-content: flex-end;
-  align-items: baseline;
-  gap: 16px;
-  font-size: 18px;
+  font-size: 18px; /* из ранней версии — не перекрывалось позже */
+}
+.cart__total span {
+  font-size: 20px;
 }
 .cart__total strong {
   font-family: "Prata", serif;
   font-weight: 400;
-  font-size: 32px;
+  font-size: 40px; /* поздняя версия (раньше было 32px в одном месте) */
+  line-height: 1;
 }
 
-/* Оплата/форма — пока скрыто для чистого вида */
+/* Способы оплаты (внутри .cart__total) */
 .cart__pay {
-  display: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  display: flex; /* активируем, т.к. позднее правило перекрывало display:none */
+  align-items: center;
+  justify-content: flex-end;
+  gap: 28px;
 }
-.cart__form {
-  display: none;
+.cart__pay--sale {
+  justify-content: flex-start;
 }
-
-/* Кнопка оформить — В ПОТОКЕ (не фиксированная) */
-.cart__submit {
-  position: static; /* важно: убрали absolute */
-  transform: none;
-  margin: 18px auto 6px; /* центрируем */
-  padding: 14px 26px;
-  border-radius: 999px;
-  background: #000;
-  color: #fff;
-  border: 1px solid #000;
-  font-weight: 700;
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.25);
+.cart__pay .chk {
   display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  user-select: none;
+  font-size: 24px;
+}
+/* Квадратные radio справа от подписи */
+.cart__pay .chk input[type="radio"] {
+  appearance: none;
+  -webkit-appearance: none;
+  position: relative;
+  width: 42px;
+  height: 42px;
+  border: 2px solid #111;
+  background: #fff;
+  outline: none;
+  cursor: pointer;
+}
+.cart__pay .chk input[type="radio"]::after {
+  content: "";
+  position: absolute;
+  inset: 7px;
+  background: transparent;
+  transition: background-color 0.15s ease;
+}
+.cart__pay .chk input[type="radio"]:checked::after {
+  background: #111;
 }
 
-/* Мобильный bottom-sheet (выезжает снизу) */
-@media (max-width: 780px) {
-  .cart__sheet {
-    left: 0;
-    right: 0;
-    bottom: 0;
-    top: auto;
-    width: 100%;
-    max-height: calc(100vh - 80px);
-    border-radius: 20px 20px 0 0;
-    padding: 22px 16px 18px;
-
-    /* старт анимации снизу */
-    transform: translateY(24px);
-  }
-  .cart.is-open .cart__sheet {
-    transform: translateY(0);
-  }
-
-  .cart__title {
-    font-size: 36px;
-    margin: 2px 0 10px;
-  }
-  .cart__scroll {
-    padding: 0 2px; /* без нижнего отступа */
-  }
-  .cart__item {
-    grid-template-columns: 82px 1fr auto;
-    gap: 14px 14px;
-    padding: 14px 2px;
-  }
-  .cart__thumb {
-    width: 82px;
-    height: 82px;
-    border-radius: 14px;
-  }
-  .cart__name {
-    font-size: 26px;
-  }
-  .cart__price {
-    font-size: 24px;
-  }
-  .qty__btn {
-    width: 30px;
-    height: 30px;
-  }
+.cart-pay_block {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+.cart-pay_block--sale {
+  display: flex;
+  gap: 70px;
+}
+/* Порядок подписи и квадрата */
+.cart__pay .chk {
+  flex-direction: row-reverse;
+}
+.cart__pay--sale .chk {
+  flex-direction: row;
 }
 
 /* ===== Секции внутри корзины (две колонки на десктопе) ===== */
-
 .cart__sections {
   margin-top: 18px;
   display: grid;
   grid-template-columns: 1.1fr 0.9fr;
   gap: 28px;
 }
-
 .cart__pane {
   display: grid;
   grid-auto-rows: min-content;
   gap: 20px;
 }
-
 .cart__section-title {
   font-family: "Prata", serif;
   font-weight: 400;
@@ -325,7 +312,6 @@
   text-align: center;
   margin: 8px 0 4px;
 }
-
 .cart__section-title--total {
   text-align: right;
 }
@@ -334,14 +320,14 @@
   line-height: 1;
 }
 
-/* Поля ввода — крупные, как на макете */
+/* Поля ввода — крупные */
 .cart__input {
   border: 1px solid #111;
-  border-radius: 0; /* строгий прямоугольник */
+  border-radius: 0;
   background: #fff;
   color: #111;
-  padding: 14px 18px;
-  font-size: 20px;
+  padding: 18px 16px; /* унифицировано с формой */
+  font-size: 24px; /* унифицировано с формой */
   line-height: 1.2;
 }
 .cart__input--lg {
@@ -368,7 +354,7 @@
   color: #111;
 }
 
-/* Крупные чекбоксы/радиокнопки */
+/* Крупные чекбоксы/радио */
 .chk.chk--lg {
   font-size: 26px;
   line-height: 1.2;
@@ -377,7 +363,7 @@
 .chk.chk--lg input {
   width: 28px;
   height: 28px;
-  accent-color: #000; /* чёрный маркер */
+  accent-color: #000;
 }
 
 /* Способ оплаты — колонкой справа */
@@ -387,156 +373,13 @@
   margin: 8px 0 6px;
 }
 
-/* Кнопка оформления — обычный поток, под контентом правой колонки */
-.cart__submit {
-  position: static;
-  transform: none;
-  margin-top: 12px;
-  justify-self: start; /* на мобильном растянем */
-  padding: 14px 26px;
-  border-radius: 999px;
-  background: #000;
-  color: #fff;
-  border: 1px solid #000;
-  font-weight: 700;
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.25);
-  cursor: pointer;
-}
-
-/* Адаптив: одна колонка на мобиле */
-@media (max-width: 900px) {
-  .cart__sections {
-    grid-template-columns: 1fr;
-    gap: 22px;
-  }
-  .cart__section-title,
-  .cart__section-title--total {
-    text-align: left;
-  }
-  .cart__section-title--total #cart-total {
-    font-size: 34px;
-  }
-  .cart__submit {
-    width: 100%;
-    justify-self: stretch; /* на всю ширину */
-  }
-  .cart__row--half {
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-  }
-  .cart__input--lg {
-    font-size: 20px;
-    padding: 16px 18px;
-  }
-  .chk.chk--lg {
-    font-size: 22px;
-  }
-  .chk.chk--lg input {
-    width: 24px;
-    height: 24px;
-  }
-}
-
-/* (опционально) чуть выровнять общий вид списка и секций */
-.cart__list + .cart__sections {
-  margin-top: 16px;
-}
-/* ====== TOTAL + PAY (row) ====== */
-.cart__total {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 24px;
-  padding: 8px 6px 0;
-  border-top: 1px solid #eee;
-  margin-top: 10px;
-}
-.cart__total span {
-  font-size: 20px;
-}
-.cart__total strong {
-  font-family: "Prata", serif;
-  font-weight: 400;
-  font-size: 40px;
-  line-height: 1;
-}
-
-/* блок способов оплаты стоит ВНУТРИ .cart__total (см. JS ниже) */
-.cart__pay {
-  margin: 0;
-  padding: 0;
-  border: 0;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 28px;
-}
-.cart__pay--sale {
-  justify-content: flex-start;
-}
-.cart__pay .chk {
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
-  cursor: pointer;
-  user-select: none;
-  font-size: 24px;
-}
-
-/* кастомные radio: квадрат справа от текста */
-.cart__pay .chk input[type="radio"] {
-  appearance: none;
-  -webkit-appearance: none;
-  position: relative;
-  width: 42px;
-  height: 42px;
-  border: 2px solid #111;
-
-  background: #fff;
-  outline: none;
-  cursor: pointer;
-}
-.cart__pay .chk input[type="radio"]::after {
-  content: "";
-  position: absolute;
-  inset: 7px;
-  background: transparent;
-  transition: background-color 0.15s ease;
-}
-.cart__pay .chk input[type="radio"]:checked::after {
-  background: #111;
-}
-.cart-pay_block {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-.cart-pay_block--sale {
-  display: flex;
-  gap: 70px;
-}
-/* Чтобы квадрат был справа от подписи — переворачиваем порядок */
-.cart__pay .chk {
-  flex-direction: row-reverse;
-}
-.cart__pay--sale .chk {
-  flex-direction: row;
-}
-/* ====== NAME + PHONE + NOTE ====== */
+/* Форма (открытая версия) */
 .cart__form {
-  display: grid;
+  display: grid; /* поздняя версия активирует форму */
   gap: 14px;
   margin-top: 18px;
 }
-.cart__input {
-  border: 1px solid #111;
-
-  padding: 18px 16px;
-  font-size: 24px;
-  line-height: 1.2;
-}
-
-/* Прячем все поля «блока получателя», оставляем только name/phone для этого шага */
+/* Прячем поля получателя — оставляем только name/phone */
 .cart__form .cart__subtitle,
 .cart__form [name="rname"],
 .cart__form [name="rphone"],
@@ -546,15 +389,69 @@
   display: none !important;
 }
 
-/* Текст-пояснение под телефоном */
-.cart__hint {
-  margin-top: 8px;
-  font-size: 22px;
-  line-height: 1.35;
+/* Кнопка оформить — в потоке */
+.cart__submit {
+  position: static;
+  transform: none;
+  display: inline-flex;
+  padding: 14px 26px;
+  border-radius: 999px;
+  background: #000;
+  color: #fff;
+  border: 1px solid #000;
+  font-weight: 700;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+  justify-self: start; /* из поздней версии */
+  margin: 18px auto 6px; /* из ранней версии */
+  margin-top: 12px; /* поздняя версия переопределяет верхний отступ */
 }
 
-/* мелкие правки на мобилке */
+/* Мобильный bottom-sheet (выезжает снизу) */
 @media (max-width: 780px) {
+  .cart__sheet {
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: auto;
+    width: 100%;
+    max-height: calc(100vh - 80px);
+    border-radius: 20px 20px 0 0;
+    padding: 22px 16px 18px;
+    transform: translateY(24px);
+  }
+  .cart.is-open .cart__sheet {
+    transform: translateY(0);
+  }
+
+  .cart__title {
+    font-size: 36px;
+    margin: 2px 0 10px;
+  }
+  .cart__scroll {
+    padding: 0 2px;
+  }
+  .cart__item {
+    grid-template-columns: 82px 1fr;
+    gap: 14px 14px;
+    padding: 14px 2px;
+  }
+  .cart__thumb {
+    width: 82px;
+    height: 82px;
+    border-radius: 14px;
+  }
+  .cart__name {
+    font-size: 26px;
+  } /* поздняя версия */
+  .cart__price {
+    font-size: 24px;
+  }
+  .qty__btn {
+    width: 30px;
+    height: 30px;
+  }
+
   .cart__total strong {
     font-size: 32px;
   }
@@ -576,4 +473,226 @@
   .cart__hint {
     font-size: 18px;
   }
+}
+
+/* Адаптив: одна колонка на мобиле */
+@media (max-width: 900px) {
+  .cart__sections {
+    grid-template-columns: 1fr;
+    gap: 22px;
+  }
+  .cart__section-title,
+  .cart__section-title--total {
+    text-align: left;
+  }
+  .cart__section-title--total #cart-total {
+    font-size: 34px;
+  }
+  .cart__submit {
+    width: 100%;
+    justify-self: stretch;
+  }
+  .cart__row--half {
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .cart__input--lg {
+    font-size: 20px;
+    padding: 16px 18px;
+  }
+  .chk.chk--lg {
+    font-size: 22px;
+  }
+  .chk.chk--lg input {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+/* Список + секции промежуток */
+.cart__list + .cart__sections {
+  margin-top: 16px;
+}
+
+/* Select с «треугольной» стрелкой справа */
+.cart__select-wrap {
+  position: relative;
+}
+.cart__select {
+  -webkit-appearance: none;
+  appearance: none;
+  background: #fff;
+  padding-right: 44px;
+  width: 100%;
+}
+.cart__select-wrap::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+  right: 16px;
+  top: 50%;
+  width: 0;
+  height: 0;
+  margin-top: -6px;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 10px solid #111;
+  transition: transform 0.18s ease;
+  transform: rotate(0deg);
+}
+.cart__select-wrap.is-open::after {
+  transform: rotate(180deg);
+}
+
+/* Textarea под адрес */
+.cart__textarea {
+  resize: vertical;
+  min-height: 96px;
+}
+
+/* На мобилке половинки в столбик */
+@media (max-width: 900px) {
+  .cart__row--half {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+}
+
+/* ---- FLATPICKR: монохромный вид ---- */
+.flatpickr-calendar {
+  font-family: "Prata", serif;
+  border: 1px solid #111 !important;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.25) !important;
+  background: #fff !important;
+  color: #111 !important;
+}
+.flatpickr-months .flatpickr-month {
+  height: 48px;
+}
+.flatpickr-current-month .flatpickr-monthDropdown-months,
+.flatpickr-current-month input.cur-year {
+  font-size: 16px;
+}
+.flatpickr-prev-month,
+.flatpickr-next-month {
+  color: #111 !important;
+  fill: #111 !important;
+}
+.flatpickr-weekday {
+  color: #111 !important;
+}
+.flatpickr-day {
+  border-radius: 4px;
+  border: 1px solid transparent;
+}
+.flatpickr-day:hover {
+  background: #f3f3f3;
+}
+.flatpickr-day.today {
+  border-color: #111;
+}
+.flatpickr-day.selected,
+.flatpickr-day.startRange,
+.flatpickr-day.endRange {
+  background: #111 !important;
+  border-color: #111 !important;
+  color: #fff !important;
+}
+/* таймпикер */
+.flatpickr-time {
+  border-top: 1px solid #1111 !important;
+}
+.flatpickr-time input,
+.flatpickr-time .numInputWrapper span {
+  color: #111;
+}
+.flatpickr-time .numInputWrapper span.arrowUp::after,
+.flatpickr-time .numInputWrapper span.arrowDown::after {
+  border-bottom-color: #111;
+  border-top-color: #111;
+}
+/* кнопки Сегодня / Очистить */
+.flatpickr-footer {
+  border-top: 1px solid #1111;
+}
+
+.picker {
+  width: 100%;
+}
+
+/* ===== UPSell внутри корзины ===== */
+.cart__upsell {
+  margin: 18px 0 8px;
+}
+.cart__upsell .cart__section-title {
+  font-size: 44px;
+  text-align: center;
+  margin: 8px 0 18px;
+}
+.upsell__grid {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(4, 1fr);
+}
+@media (max-width: 1100px) {
+  .upsell__grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+@media (max-width: 780px) {
+  .upsell__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 480px) {
+  .upsell__grid {
+    grid-template-columns: 1fr;
+  }
+}
+.upsell-card {
+  display: grid;
+  grid-template-rows: auto auto auto;
+  gap: 10px;
+  border-radius: 18px;
+  padding: 8px;
+}
+.upsell-card__img {
+  border-radius: 18px;
+  overflow: hidden;
+  background: #f3f3f3;
+  aspect-ratio: 1 / 1;
+}
+.upsell-card__img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.upsell-card__title {
+  font-size: 18px;
+  line-height: 1.35;
+  color: #111;
+}
+.upsell-card__btn {
+  justify-self: start;
+  margin-top: 2px;
+  padding: 10px 18px;
+  border-radius: 999px;
+  background: #000;
+  color: #fff;
+  border: 1px solid #000;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  user-select: none;
+}
+.upsell-card__btn:active {
+  transform: translateY(1px);
+}
+
+#cart-submit.is-loading {
+  opacity: 0.8;
+  pointer-events: none;
 }
