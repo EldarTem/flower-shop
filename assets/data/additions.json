@@ -1,0 +1,34 @@
+[
+  {
+    "id": "add-001",
+    "title": "Открытка с пожеланием",
+    "price": 0,
+    "img": "assets/images/izobr/cert-1-1.jpg",
+    "href": "/addition.html?id=add-001",
+    "excerpt": "Подпишем от руки"
+  },
+  {
+    "id": "add-002",
+    "title": "Транспортировочный бокс с водой",
+    "price": 400,
+    "img": "assets/images/izobr/cert-1.jpg",
+    "href": "/addition.html?id=add-002",
+    "excerpt": "Свежесть в дороге"
+  },
+  {
+    "id": "add-003",
+    "title": "Секатор",
+    "price": 700,
+    "img": "assets/images/izobr/cert-2-2.jpg",
+    "href": "/addition.html?id=add-003",
+    "excerpt": "Уход за цветами"
+  },
+  {
+    "id": "add-004",
+    "title": "Ваза стеклянная",
+    "price": 1200,
+    "img": "assets/images/izobr/cert-2.jpg",
+    "href": "/addition.html?id=add-004",
+    "excerpt": "Минималистичная"
+  }
+]

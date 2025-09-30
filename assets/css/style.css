@@ -1131,7 +1131,7 @@ ul.social__list li.social__item {
 
 /* фото */
 .product__photo {
-  border: 1px solid rgba(255, 255, 255, 0.8);
+  border: 2px solid rgba(255, 255, 255, 0.8);
   border-radius: 10px;
   overflow: hidden;
   background: #111;
@@ -1161,7 +1161,7 @@ ul.social__list li.social__item {
   width: 100%;
   aspect-ratio: 1 / 1;
   border-radius: 10px;
-  border: 1px dashed rgba(255, 255, 255, 0.65);
+  border: 2px solid rgba(255, 255, 255, 0.65);
   overflow: hidden;
   cursor: pointer;
   background: transparent;
@@ -1235,7 +1235,7 @@ ul.social__list li.social__item {
 
 /* текстовые блоки */
 .product__desc {
-  font-size: 18px;
+  font-size: 20px;
   line-height: 1.6;
   margin-bottom: 16px;
 }
@@ -1307,6 +1307,80 @@ ul.social__list li.social__item {
   .product__price {
     font-size: 28px;
   }
+}
+/* Плейсхолдер, когда у товара нет фото */
+.product__photo.is-empty {
+  display: grid;
+  place-items: center;
+  height: var(--product-photo-h);
+  border: 1px dashed rgba(255, 255, 255, 0.65);
+  border-radius: 10px;
+  background: #0f0f0f;
+  position: relative;
+  overflow: hidden;
+}
+
+/* белая карточка внутри, как на скрине */
+.product__photo.is-empty::before {
+  content: "";
+  width: min(86%, 520px);
+  aspect-ratio: 3 / 4;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.06) inset;
+  display: block;
+}
+
+/* «крест» внутри карточки */
+.product__photo.is-empty::after {
+  content: "";
+  position: absolute;
+  width: min(72%, 440px);
+  aspect-ratio: 1 / 1;
+  background: linear-gradient(
+      45deg,
+      transparent calc(50% - 1px),
+      #bdbdbd 0,
+      #bdbdbd 2px,
+      transparent 0
+    ),
+    linear-gradient(
+      -45deg,
+      transparent calc(50% - 1px),
+      #bdbdbd 0,
+      #bdbdbd 2px,
+      transparent 0
+    );
+  opacity: 0.9;
+  border-radius: 10px;
+}
+
+/* миниатюры без фото */
+.thumb.is-empty {
+  border-style: dashed;
+  position: relative;
+  background: #0f0f0f;
+}
+.thumb.is-empty::before {
+  content: "";
+  position: absolute;
+  inset: 12%;
+  border-radius: 8px;
+  background: linear-gradient(
+      45deg,
+      transparent calc(50% - 1px),
+      #bdbdbd 0,
+      #bdbdbd 2px,
+      transparent 0
+    ),
+    linear-gradient(
+      -45deg,
+      transparent calc(50% - 1px),
+      #bdbdbd 0,
+      #bdbdbd 2px,
+      transparent 0
+    ),
+    #fff;
 }
 
 /* ===== SUBSCRIPTION ===== */

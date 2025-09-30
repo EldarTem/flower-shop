@@ -17,8 +17,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (v) catalog.style.setProperty("--pc-img-h-catalog", v);
   }
 
-  // если есть карусель «Популярное» — отрисуем
-  await renderPopularFromJson?.();
+  await renderSliderFromJson({
+    sectionSel: '.popular[data-slider="addons"]',
+    url: "assets/data/additions.json",
+  });
+  await renderSliderFromJson({
+    sectionSel: '.popular[data-slider="similar"]',
+    url: "assets/data/products.json",
+  });
 
   // если мы на странице каталога — отрисуем сетку каталога
   if (document.querySelector("#catalog-grid")) {
@@ -647,18 +653,24 @@ function createProductCard(p, variant = "slider") {
 }
 
 /* Вставка в слайды Swiper (пример для .popular-swiper) */
-async function renderPopularFromJson() {
-  const wrap = document.querySelector(".popular-swiper .swiper-wrapper");
+async function renderSliderFromJson({ sectionSel, url }) {
+  const section = document.querySelector(sectionSel);
+  if (!section) return;
+
+  const wrap = section.querySelector(".popular-swiper .swiper-wrapper");
   if (!wrap) return;
-  const products = await loadProducts(); // если нужно, передай другой url
-  wrap.innerHTML = ""; // очистим
-  products.forEach((p) => {
+
+  const list = await loadProducts(url); // читает JSON
+  wrap.innerHTML = "";
+
+  (Array.isArray(list) ? list : []).forEach((p) => {
     const slide = document.createElement("div");
     slide.className = "swiper-slide";
     slide.appendChild(createProductCard(p, "slider"));
     wrap.appendChild(slide);
   });
 }
+
 /* Рендер каталога в .catalog__grid */
 async function renderCatalogFromJson(opts = {}) {
   const {
@@ -704,8 +716,6 @@ function addToCart(item) {
     });
   localStorage.setItem(key, JSON.stringify(cart));
 }
-
-
 
 /* ===== Toast ===== */
 function ensureToastHost() {

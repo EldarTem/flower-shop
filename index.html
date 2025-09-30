@@ -11,13 +11,6 @@
     <link rel="stylesheet" href="assets/libs/swiper/swiper-bundle.min.css" />
     <link rel="stylesheet" href="assets/css/product-card.css" />
     <link rel="stylesheet" href="assets/css/cart.css" />
-    <link
-      rel="preload"
-      href="assets/fonts/futuralight.ttf"
-      as="font"
-      type="font/ttf"
-      crossorigin
-    />
 
     <link
       rel="icon"
@@ -74,7 +67,7 @@
     </section>
 
     <!-- Популярное -->
-    <section class="popular container">
+    <section class="popular container" data-slider="similar">
       <h2 class="popular__title">ПОПУЛЯРНОЕ</h2>
       <div class="popular__slider-wrap">
         <button class="popular-nav popular-prev" aria-label="Предыдущие">
@@ -85,13 +78,7 @@
         </button>
 
         <div class="swiper popular-swiper">
-          <div class="swiper-wrapper">
-            <!-- Слайды карточек (оставляю твои примеры) -->
-            <div data-include="partials/product-card.html"></div>
-            <div data-include="partials/product-card.html"></div>
-            <div data-include="partials/product-card.html"></div>
-            <div data-include="partials/product-card.html"></div>
-          </div>
+          <div class="swiper-wrapper"><!-- js --></div>
         </div>
       </div>
     </section>
@@ -222,79 +209,106 @@
 
         <!-- скроллируемая область списка -->
         <div class="cart__scroll">
+          <!-- список товаров -->
           <ul class="cart__list" id="cart-list">
             <!-- рендер из JS -->
           </ul>
 
-          <!-- ИТОГО -->
-          <div class="cart__total">
-            <span>К оплате:</span>
-            <strong id="cart-total">0 ₽</strong>
-          </div>
+          <!-- Левая колонка -->
 
-          <!-- Оплата -->
-          <fieldset class="cart__pay">
-            <label class="chk">
-              <input type="radio" name="pay" value="online" checked />
-              <span>Онлайн</span>
-            </label>
-            <label class="chk">
-              <input type="radio" name="pay" value="cod" />
-              <span>При получении</span>
-            </label>
-          </fieldset>
+          <!-- Правая колонка -->
+          <section class="cart__pane">
+            <h4 class="cart__section-title cart__section-title--total">
+              К оплате: <span id="cart-total">0 ₽</span>
+            </h4>
 
-          <!-- Форма -->
-          <form class="cart__form" id="cart-form">
-            <input class="cart__input" name="name" placeholder="Ваше имя" />
-            <input class="cart__input" name="phone" placeholder="Телефон" />
-            <h4 class="cart__subtitle">Получатель заказа</h4>
+            <!-- Способ оплаты (оставляем те же name/value) -->
+            <fieldset class="cart__pay cart__pay--cols">
+              <div class="cart-pay_block">
+                <label class="chk chk--lg">
+                  <input type="radio" name="pay" value="online" checked />
+                  <span>Онлайн</span>
+                </label>
+                <label class="chk chk--lg">
+                  <input type="radio" name="pay" value="cod" />
+                  <span>При получении</span>
+                </label>
+              </div>
+            </fieldset>
+
+            <!-- Контакты заказчика -->
             <input
-              class="cart__input"
-              name="rname"
+              class="cart__input cart__input--lg"
+              name="name"
+              placeholder="Ваше имя"
+            />
+            <input
+              class="cart__input cart__input--lg"
+              name="phone"
+              placeholder="Телефон"
+            />
+
+            <p class="cart__note">
+              После отправки формы наши операторы свяжутся с вами для уточнения
+              деталей заказа.
+            </p>
+
+            <!-- Кнопка оформления (внизу контента, не фиксированная) -->
+            <button id="cart-submit" class="cart__submit" type="button">
+              Оформить заказ
+            </button>
+          </section>
+          <section class="cart__pane">
+            <h4 class="cart__section-title cart__section-title--sale">
+              Получатель заказа
+            </h4>
+            <input
+              class="cart__input cart__input--lg"
+              name="name"
               placeholder="Имя получателя"
             />
             <input
-              class="cart__input"
-              name="rphone"
+              class="cart__input cart__input--lg"
+              name="phone"
               placeholder="Телефон получателя"
             />
-            <div class="cart__row">
-              <label class="chk">
-                <input type="checkbox" name="delivery" checked />
-                <span>Доставка</span>
-              </label>
-              <label class="chk">
-                <input type="checkbox" name="pickup" />
-                <span>Самовывоз</span>
-              </label>
-            </div>
-            <div class="cart__row">
-              <input class="cart__input" name="date" placeholder="Дата" />
-              <input class="cart__input" name="time" placeholder="Время" />
-            </div>
-            <select class="cart__input" name="city">
-              <option value="" hidden>Город доставки</option>
-              <option>Симферополь</option>
-              <option>Севастополь</option>
-              <option>Другой</option>
-            </select>
-            <textarea
-              class="cart__input"
-              rows="3"
-              name="addr"
-              placeholder="Адрес доставки"
-            ></textarea>
-          </form>
+            <!-- Способ оплаты (оставляем те же name/value) -->
+            <fieldset class="cart__pay cart__pay--sale cart__pay--cols">
+              <div class="cart-pay_block--sale">
+                <label class="chk chk--lg">
+                  <input type="radio" name="pay" value="online" checked />
+                  <span>Онлайн</span>
+                </label>
+                <label class="chk chk--lg">
+                  <input type="radio" name="pay" value="cod" />
+                  <span>При получении</span>
+                </label>
+              </div>
+            </fieldset>
 
-          <!-- Дополнить заказ -->
-          <h4 class="cart__subtitle">Дополнить заказ</h4>
-          <div id="cart-upsell" class="cart__upsell"><!-- рендер из JS --></div>
+            <!-- Контакты заказчика -->
+            <input
+              class="cart__input cart__input--lg"
+              name="name"
+              placeholder="Ваше имя"
+            />
+            <input
+              class="cart__input cart__input--lg"
+              name="phone"
+              placeholder="Телефон"
+            />
+
+            <p class="cart__note">
+              После отправки формы наши операторы свяжутся с вами для уточнения
+              деталей заказа.
+            </p>
+
+            <!-- Кнопка оформления (внизу контента, не фиксированная) -->
+            <button id="cart-submit" class="cart__submit" type="button">
+              Оформить заказ
+            </button>
+          </section>
         </div>
-
-        <button id="cart-submit" class="cart__submit" type="button">
-          Оформить заказ
-        </button>
       </div>
     </div>
     <button id="to-top" class="to-top" type="button" aria-label="Наверх">

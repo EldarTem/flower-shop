@@ -76,7 +76,9 @@
 
   --container-max: 1400px;
 
-  --font-ui: "futuralight", serif;
+  --font-ui: "Nunito Sans", system-ui, -apple-system, "Segoe UI", Roboto, Arial,
+    sans-serif;
+  --font-decor: "Prata", Georgia, "Times New Roman", serif;
   --fs-nav: 22px;
 }
 
@@ -90,6 +92,24 @@ body {
 body {
   padding-inline: var(--space-15);
 }
+/* Заголовки/титулы под Prata */
+.cb__title,
+.categories__title,
+.popular__title,
+.trust__title,
+.contacts__title,
+.flower-menu__title,
+.catalog__title,
+.product__title,
+.subscription__title,
+.sub-block__title,
+.cat-card__label,
+.product-card__price,
+.product__price, .product__price-row {
+  font-family: var(--font-decor);
+  font-weight: 400; /* у Prata обычно один начерт */
+}
+
 @media (max-width: 781px) {
   body {
     padding-inline: var(--space-2);
@@ -129,40 +149,38 @@ a {
   white-space: nowrap;
 }
 
-/* Regular */
+/* Nunito Sans — базовый UI-шрифт */
 @font-face {
-  font-family: "futuralight";
-  src: url("../fonts/futuralight.ttf") format("ttf"),
-    url("../fonts/futuralight.ttf") format("ttf");
+  font-family: "Nunito Sans";
+  src: url("../fonts/NunitoSans-Regular.woff2") format("woff2");
   font-weight: 400;
   font-style: normal;
-  font-display: swap; /* важное — не блокируем отрисовку текста */
+  font-display: swap;
 }
 
-/* Medium (пример) */
 @font-face {
-  font-family: "futuralight";
-  src: url("../fonts/futuralight.ttf") format("ttf");
-  font-weight: 500;
+  font-family: "Nunito Sans";
+  src: url("../fonts/NunitoSans-SemiBold.woff2") format("woff2"); /* или Bold */
+  font-weight: 600; /* если Bold — поставь 700 */
   font-style: normal;
   font-display: swap;
 }
 
-/* Bold */
+/* (опционально) курсив, если нужен */
 @font-face {
-  font-family: "futuralight";
-  src: url("../fonts/futuralight.ttf") format("ttf");
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
-
-/* Italic (если есть) */
-@font-face {
-  font-family: "futuralight";
-  src: url("../fonts/futuralight.ttf") format("ttf");
+  font-family: "Nunito Sans";
+  src: url("../fonts/NunitoSans-Italic.woff2") format("woff2");
   font-weight: 400;
   font-style: italic;
+  font-display: swap;
+}
+
+/* Prata — заголовки/акценты */
+@font-face {
+  font-family: "Prata";
+  src: url("../fonts/Prata-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
   font-display: swap;
 }
 

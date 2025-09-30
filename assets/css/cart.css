@@ -1,60 +1,106 @@
-/* контейнер */
+/* ==============================
+   Cart modal — стиль как на макете #2
+   Совместим с текущей разметкой и JS
+   ============================== */
+
+/* Контейнер модалки */
 .cart {
   position: fixed;
   inset: 0;
   z-index: 1300;
   display: none;
+  opacity: 0;
+  transition: opacity 0.24s ease;
 }
 .cart.is-open {
   display: block;
+  opacity: 1;
 }
 .cart__backdrop {
   position: absolute;
   inset: 0;
   background: rgba(0, 0, 0, 0.55);
+  opacity: 0;
+  transition: opacity 0.24s ease;
+}
+.cart.is-open .cart__backdrop {
+  opacity: 1;
 }
 
-/* sheet */
+/* Белый лист */
 .cart__sheet {
   position: absolute;
   left: 50%;
   top: 50%;
-  transform: translate(-50%, -50%);
-  width: min(960px, 92vw);
+  box-sizing: border-box;
+  max-width: 980px;
+  width: min(980px, 92vw);
   max-height: 86vh;
   background: #fff;
   color: #111;
   border-radius: 16px;
-  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  padding: 28px 28px 22px;
+
+  /* slide-up на десктопе */
+  transform: translate(-50%, calc(-50% + 24px));
+  opacity: 0;
+  transition: transform 0.36s cubic-bezier(0.22, 0.9, 0.22, 1),
+    opacity 0.36s ease;
 }
+.cart.is-open .cart__sheet {
+  transform: translate(-50%, -50%);
+  opacity: 1;
+}
+
+/* Кнопка закрытия */
 .cart__close {
   position: absolute;
-  right: 10px;
+  right: 14px;
   top: 10px;
   width: 36px;
   height: 36px;
   border: 0;
   background: transparent;
-  font-size: 28px;
+  font-size: 50px;
   line-height: 1;
+  color: #444;
   cursor: pointer;
-  color: #111;
-}
-.cart__title {
-  font-size: 32px;
-  text-align: center;
-  padding: 18px 20px 12px;
-  border-bottom: 1px solid #eee;
-}
-.cart__scroll {
-  padding: 16px 18px 140px;
-  overflow: auto;
 }
 
-/* список */
+/* Заголовок */
+.cart__title {
+  font-family: "Prata", serif;
+  font-weight: 400;
+  font-size: 48px;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  text-align: center;
+  margin: 6px 0 14px;
+  padding: 0;
+  border: 0;
+}
+
+/* Скроллируемая часть (без видимого скроллбара) */
+.cart__scroll {
+  flex: 1; /* занять всё оставшееся место по высоте */
+  min-height: 0; /* чтобы overflow работал внутри flex-контейнера */
+  overflow: auto;
+
+  /* скрыть полосу прокрутки, но оставить сам скролл */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/старый Edge */
+}
+.cart__scroll::-webkit-scrollbar {
+  /* Chrome/Safari/Edge */
+  width: 0;
+  height: 0;
+}
+
+/* Список */
 .cart__list {
   list-style: none;
   margin: 0;
@@ -62,18 +108,21 @@
 }
 .cart__item {
   display: grid;
-  grid-template-columns: 84px 1fr auto;
-  gap: 16px;
+  grid-template-columns: 130px 1fr auto;
+  gap: 18px 22px;
   align-items: center;
-  padding: 14px 8px;
-  border-bottom: 1px solid #f0f0f0;
+  padding: 18px 6px;
+  border-bottom: 1px solid #eee;
 }
+
+/* Миниатюра */
 .cart__thumb {
-  width: 84px;
-  height: 84px;
-  border-radius: 10px;
+  width: 130px;
+  height: 160px;
+  border-radius: 16px;
   overflow: hidden;
-  border: 1px solid #eee;
+  background: #f3f3f3;
+  border: 0;
 }
 .cart__thumb img {
   width: 100%;
@@ -81,138 +130,120 @@
   object-fit: cover;
   display: block;
 }
+
+/* Контент */
 .cart__name {
-  font-size: 20px;
+  font-family: "Prata", serif;
+  font-weight: 400;
+  font-size: 36px;
+  line-height: 1.05;
   margin: 0 0 6px;
 }
 .cart__meta {
-  font-size: 13px;
-  color: #666;
-  margin: 0;
+  margin: 0 0 10px;
+  color: #7a7a7a;
+  font-size: 16px;
+  line-height: 1.45;
 }
-.cart__price {
-  font-weight: 700;
-  white-space: nowrap;
-  font-size: 18px;
-}
+
+/* Количество и удалить */
 .cart__ctrls {
   display: flex;
-  gap: 10px;
   align-items: center;
-  margin-top: 8px;
+  gap: 12px;
+  margin-top: 6px;
 }
 .qty {
   display: inline-flex;
   align-items: center;
   gap: 10px;
+  background: #f7f7f7;
+  border-radius: 999px;
+  padding: 6px 10px;
 }
 .qty__btn {
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  border: 1px solid #ddd;
+  appearance: none;
+  -webkit-appearance: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  border: 1px solid #d9d9d9;
   background: #fff;
+  color: #333;
+  font-size: 18px;
+  line-height: 1;
   cursor: pointer;
+  transition: box-shadow 0.18s ease, transform 0.12s ease,
+    border-color 0.18s ease;
+}
+.qty__btn:hover {
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+}
+.qty__btn:active {
+  transform: translateY(1px);
 }
 .qty__val {
   min-width: 18px;
   text-align: center;
-}
-.cart__remove {
-  font-size: 14px;
-  color: #888;
-  text-decoration: underline;
-  cursor: pointer;
-}
-
-/* итого и форма */
-.cart__total {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 16px 6px;
-  font-size: 20px;
-}
-.cart__pay {
-  display: flex;
-  gap: 22px;
-  padding: 8px 6px 14px;
-}
-.chk {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  cursor: pointer;
-}
-.chk input {
-  accent-color: #111;
-}
-
-.cart__form {
-  display: grid;
-  gap: 10px;
-  padding-top: 4px;
-}
-.cart__row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-}
-.cart__subtitle {
-  font-size: 20px;
-  margin: 18px 0 8px;
-}
-.cart__input {
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  padding: 10px 12px;
-  font-size: 16px;
-}
-
-/* upsell */
-.cart__upsell {
-  display: grid;
-  grid-auto-flow: column;
-  gap: 14px;
-  overflow: auto;
-  padding-bottom: 8px;
-}
-.ups {
-  width: 120px;
-  display: grid;
-  justify-items: center;
-  gap: 8px;
-}
-.ups__thumb {
-  width: 120px;
-  height: 120px;
-  border-radius: 10px;
-  overflow: hidden;
-  border: 1px solid #eee;
-}
-.ups__thumb img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-.ups__name {
-  font-size: 12px;
-  text-align: center;
-}
-.ups__price {
-  padding: 6px 10px;
-  border-radius: 999px;
-  background: #000;
-  color: #fff;
   font-weight: 600;
 }
 
-/* кнопка */
+.cart__remove {
+  appearance: none;
+  -webkit-appearance: none;
+  border: 0;
+  background: transparent;
+  color: #7a7a7a;
+  font-size: 16px;
+  padding: 6px 8px;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  text-decoration: none;
+}
+.cart__remove:hover {
+  color: #111;
+  text-decoration: underline;
+}
+
+/* Цена справа */
+.cart__price {
+  font-family: "Prata", serif;
+  font-size: 34px;
+  font-weight: 400;
+  white-space: nowrap;
+  margin-left: 8px;
+}
+
+/* ИТОГО */
+.cart__total {
+  border-top: 1px solid #eee;
+  margin-top: 10px;
+  padding: 16px 6px 8px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: baseline;
+  gap: 16px;
+  font-size: 18px;
+}
+.cart__total strong {
+  font-family: "Prata", serif;
+  font-weight: 400;
+  font-size: 32px;
+}
+
+/* Оплата/форма — пока скрыто для чистого вида */
+.cart__pay {
+  display: none;
+}
+.cart__form {
+  display: none;
+}
+
+/* Кнопка оформить — В ПОТОКЕ (не фиксированная) */
 .cart__submit {
-  position: absolute;
-  left: 50%;
-  bottom: 16px;
-  transform: translateX(-50%);
+  position: static; /* важно: убрали absolute */
+  transform: none;
+  margin: 18px auto 6px; /* центрируем */
   padding: 14px 26px;
   border-radius: 999px;
   background: #000;
@@ -220,34 +251,329 @@
   border: 1px solid #000;
   font-weight: 700;
   box-shadow: 0 10px 28px rgba(0, 0, 0, 0.25);
+  display: inline-flex;
 }
 
-/* мобильный bottom-sheet */
+/* Мобильный bottom-sheet (выезжает снизу) */
 @media (max-width: 780px) {
   .cart__sheet {
     left: 0;
     right: 0;
     bottom: 0;
     top: auto;
-    transform: none;
     width: 100%;
     max-height: calc(100vh - 80px);
     border-radius: 20px 20px 0 0;
+    padding: 22px 16px 18px;
+
+    /* старт анимации снизу */
+    transform: translateY(24px);
   }
+  .cart.is-open .cart__sheet {
+    transform: translateY(0);
+  }
+
   .cart__title {
-    padding-top: 14px;
+    font-size: 36px;
+    margin: 2px 0 10px;
   }
   .cart__scroll {
-    padding: 12px 14px 120px;
+    padding: 0 2px; /* без нижнего отступа */
   }
   .cart__item {
-    grid-template-columns: 72px 1fr auto;
+    grid-template-columns: 82px 1fr auto;
+    gap: 14px 14px;
+    padding: 14px 2px;
   }
   .cart__thumb {
-    width: 72px;
-    height: 72px;
+    width: 82px;
+    height: 82px;
+    border-radius: 14px;
   }
   .cart__name {
+    font-size: 26px;
+  }
+  .cart__price {
+    font-size: 24px;
+  }
+  .qty__btn {
+    width: 30px;
+    height: 30px;
+  }
+}
+
+/* ===== Секции внутри корзины (две колонки на десктопе) ===== */
+
+.cart__sections {
+  margin-top: 18px;
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 28px;
+}
+
+.cart__pane {
+  display: grid;
+  grid-auto-rows: min-content;
+  gap: 14px;
+}
+
+.cart__section-title {
+  font-family: "Prata", serif;
+  font-weight: 400;
+  font-size: 36px;
+  line-height: 1.1;
+  text-align: center;
+  margin: 8px 0 4px;
+}
+
+.cart__section-title--total {
+  text-align: right;
+}
+.cart__section-title--total #cart-total {
+  font-size: 40px;
+  line-height: 1;
+}
+
+/* Поля ввода — крупные, как на макете */
+.cart__input {
+  border: 1px solid #111;
+  border-radius: 0; /* строгий прямоугольник */
+  background: #fff;
+  color: #111;
+  padding: 14px 18px;
+  font-size: 20px;
+  line-height: 1.2;
+}
+.cart__input--lg {
+  padding: 18px 20px;
+  font-size: 24px;
+}
+.cart__input::placeholder {
+  color: #111;
+  opacity: 0.9;
+}
+
+/* Поля-половинки (дата/время) */
+.cart__row--half {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+/* Текстовая подсказка */
+.cart__note {
+  margin: 8px 0 0;
+  font-size: 20px;
+  line-height: 1.45;
+  color: #111;
+}
+
+/* Крупные чекбоксы/радиокнопки */
+.chk.chk--lg {
+  font-size: 26px;
+  line-height: 1.2;
+  gap: 12px;
+}
+.chk.chk--lg input {
+  width: 28px;
+  height: 28px;
+  accent-color: #000; /* чёрный маркер */
+}
+
+/* Способ оплаты — колонкой справа */
+.cart__pay--cols {
+  display: grid;
+  gap: 14px;
+  margin: 8px 0 6px;
+}
+
+/* Кнопка оформления — обычный поток, под контентом правой колонки */
+.cart__submit {
+  position: static;
+  transform: none;
+  margin-top: 12px;
+  justify-self: start; /* на мобильном растянем */
+  padding: 14px 26px;
+  border-radius: 999px;
+  background: #000;
+  color: #fff;
+  border: 1px solid #000;
+  font-weight: 700;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+}
+
+/* Адаптив: одна колонка на мобиле */
+@media (max-width: 900px) {
+  .cart__sections {
+    grid-template-columns: 1fr;
+    gap: 22px;
+  }
+  .cart__section-title,
+  .cart__section-title--total {
+    text-align: left;
+  }
+  .cart__section-title--total #cart-total {
+    font-size: 34px;
+  }
+  .cart__submit {
+    width: 100%;
+    justify-self: stretch; /* на всю ширину */
+  }
+  .cart__row--half {
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .cart__input--lg {
+    font-size: 20px;
+    padding: 16px 18px;
+  }
+  .chk.chk--lg {
+    font-size: 22px;
+  }
+  .chk.chk--lg input {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+/* (опционально) чуть выровнять общий вид списка и секций */
+.cart__list + .cart__sections {
+  margin-top: 16px;
+}
+/* ====== TOTAL + PAY (row) ====== */
+.cart__total {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 8px 6px 0;
+  border-top: 1px solid #eee;
+  margin-top: 10px;
+}
+.cart__total span {
+  font-size: 20px;
+}
+.cart__total strong {
+  font-family: "Prata", serif;
+  font-weight: 400;
+  font-size: 40px;
+  line-height: 1;
+}
+
+/* блок способов оплаты стоит ВНУТРИ .cart__total (см. JS ниже) */
+.cart__pay {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 28px;
+}
+.cart__pay--sale {
+  justify-content: flex-start;
+}
+.cart__pay .chk {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  user-select: none;
+  font-size: 24px;
+}
+
+/* кастомные radio: квадрат справа от текста */
+.cart__pay .chk input[type="radio"] {
+  appearance: none;
+  -webkit-appearance: none;
+  position: relative;
+  width: 42px;
+  height: 42px;
+  border: 2px solid #111;
+
+  background: #fff;
+  outline: none;
+  cursor: pointer;
+}
+.cart__pay .chk input[type="radio"]::after {
+  content: "";
+  position: absolute;
+  inset: 7px;
+  background: transparent;
+  transition: background-color 0.15s ease;
+}
+.cart__pay .chk input[type="radio"]:checked::after {
+  background: #111;
+}
+.cart-pay_block {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+.cart-pay_block--sale {
+  display: flex;
+  gap: 70px;
+}
+/* Чтобы квадрат был справа от подписи — переворачиваем порядок */
+.cart__pay .chk {
+  flex-direction: row-reverse;
+}
+.cart__pay--sale .chk {
+  flex-direction: row;
+}
+/* ====== NAME + PHONE + NOTE ====== */
+.cart__form {
+  display: grid;
+  gap: 14px;
+  margin-top: 18px;
+}
+.cart__input {
+  border: 1px solid #111;
+
+  padding: 18px 16px;
+  font-size: 24px;
+  line-height: 1.2;
+}
+
+/* Прячем все поля «блока получателя», оставляем только name/phone для этого шага */
+.cart__form .cart__subtitle,
+.cart__form [name="rname"],
+.cart__form [name="rphone"],
+.cart__form .cart__row,
+.cart__form select[name="city"],
+.cart__form textarea[name="addr"] {
+  display: none !important;
+}
+
+/* Текст-пояснение под телефоном */
+.cart__hint {
+  margin-top: 8px;
+  font-size: 22px;
+  line-height: 1.35;
+}
+
+/* мелкие правки на мобилке */
+@media (max-width: 780px) {
+  .cart__total strong {
+    font-size: 32px;
+  }
+  .cart__pay .chk {
+    font-size: 20px;
+    gap: 10px;
+  }
+  .cart__pay .chk input[type="radio"] {
+    width: 36px;
+    height: 36px;
+  }
+  .cart__pay .chk input[type="radio"]::after {
+    inset: 6px;
+  }
+  .cart__input {
+    font-size: 20px;
+    padding: 14px 14px;
+  }
+  .cart__hint {
     font-size: 18px;
   }
 }

@@ -7,10 +7,9 @@
 
     <link rel="stylesheet" href="assets/css/base.css" />
     <link rel="stylesheet" href="assets/css/style.css" />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
-    />
+    <link rel="stylesheet" href="assets/libs/swiper/swiper-bundle.min.css" />
+    <link rel="stylesheet" href="assets/css/product-card.css" />
+    <link rel="stylesheet" href="assets/css/cart.css" />
     <link
       rel="icon"
       href="/assets/images/icons/favicon.svg"
@@ -37,7 +36,7 @@
             <li>
               <button
                 class="thumb is-active"
-                data-full="assets/images/products/pure-azure/1.jpg"
+                data-full="assets/images/izobr/goods_01.jpg"
               >
                 <img src="assets/images/izobr/goods_01.jpg" alt="Фото 1" />
               </button>
@@ -45,34 +44,19 @@
             <li>
               <button
                 class="thumb"
-                data-full="assets/images/products/pure-azure/2.jpg"
+                data-full="assets/images/izobr/cert-1-1.jpg"
               >
-                <img
-                  src="assets/images/products/pure-azure/2_sm.jpg"
-                  alt="Фото 2"
-                />
+                <img src="assets/images/izobr/cert-1-1.jpg" alt="Фото 2" />
               </button>
             </li>
             <li>
-              <button
-                class="thumb"
-                data-full="assets/images/products/pure-azure/3.jpg"
-              >
-                <img
-                  src="assets/images/products/pure-azure/3_sm.jpg"
-                  alt="Фото 3"
-                />
+              <button class="thumb" data-full="assets/images/izobr/cert-1.jpg">
+                <img src="assets/images/izobr/cert-1.jpg" alt="Фото 3" />
               </button>
             </li>
             <li>
-              <button
-                class="thumb"
-                data-full="assets/images/products/pure-azure/4.jpg"
-              >
-                <img
-                  src="assets/images/products/pure-azure/4_sm.jpg"
-                  alt="Фото 4"
-                />
+              <button class="thumb" data-full="assets/images/izobr/cert-3.jpg">
+                <img src="assets/images/izobr/cert-3.jpg" alt="Фото 4" />
               </button>
             </li>
           </ul>
@@ -111,8 +95,9 @@
           </p>
         </section>
       </div>
-      <section class="popular container">
-        <h2 class="popular__title">ПОПУЛЯРНОЕ</h2>
+      <!-- 1) Дополнения -->
+      <section class="popular container" data-slider="addons">
+        <h2 class="popular__title">ДОПОЛНЕНИЯ</h2>
         <div class="popular__slider-wrap">
           <button class="popular-nav popular-prev" aria-label="Предыдущие">
             <img src="assets/images/icons/arrowLeft.svg" alt="" />
@@ -122,68 +107,14 @@
           </button>
 
           <div class="swiper popular-swiper">
-            <div class="swiper-wrapper">
-              <!-- Слайды карточек (оставляю твои примеры) -->
-              <div class="swiper-slide">
-                <a href="#" class="product-card">
-                  <div class="product-card__img">
-                    <img
-                      src="assets/images/menu/person-holding-bouquet-tulips.jpg"
-                      alt="Роза кустовая, 12 шт, Голландия"
-                    />
-                  </div>
-                  <div class="product-card__title">
-                    Роза кустовая, 12 шт, Голландия
-                  </div>
-                  <div class="product-card__price">7 500 ₽</div>
-                </a>
-              </div>
-              <div class="swiper-slide">
-                <a href="#" class="product-card">
-                  <div class="product-card__img">
-                    <img
-                      src="assets/images/menu/person-holding-bouquet-tulips.jpg"
-                      alt="Роза Голландская, 150 шт"
-                    />
-                  </div>
-                  <div class="product-card__title">
-                    Роза Голландская, 150 шт
-                  </div>
-                  <div class="product-card__price">12 900 ₽</div>
-                </a>
-              </div>
-              <div class="swiper-slide">
-                <a href="#" class="product-card">
-                  <div class="product-card__img">
-                    <img
-                      src="assets/images/menu/person-holding-bouquet-tulips.jpg"
-                      alt="Роза пионовидная, кустовая, 50 шт"
-                    />
-                  </div>
-                  <div class="product-card__title">
-                    Роза пионовидная, кустовая, 50 шт
-                  </div>
-                  <div class="product-card__price">9 600 ₽</div>
-                </a>
-              </div>
-              <div class="swiper-slide">
-                <a href="#" class="product-card">
-                  <div class="product-card__img">
-                    <img
-                      src="assets/images/menu/person-holding-bouquet-tulips.jpg"
-                      alt="Хризантемы белые, 3 шт"
-                    />
-                  </div>
-                  <div class="product-card__title">Хризантемы белые, 3 шт</div>
-                  <div class="product-card__price">900 ₽</div>
-                </a>
-              </div>
-            </div>
+            <div class="swiper-wrapper"><!-- js --></div>
           </div>
         </div>
       </section>
-      <section class="popular container">
-        <h2 class="popular__title">ПОПУЛЯРНОЕ</h2>
+
+      <!-- 2) Похожие букеты -->
+      <section class="popular container" data-slider="similar">
+        <h2 class="popular__title">ПОХОЖИЕ БУКЕТЫ</h2>
         <div class="popular__slider-wrap">
           <button class="popular-nav popular-prev" aria-label="Предыдущие">
             <img src="assets/images/icons/arrowLeft.svg" alt="" />
@@ -193,72 +124,177 @@
           </button>
 
           <div class="swiper popular-swiper">
-            <div class="swiper-wrapper">
-              <!-- Слайды карточек (оставляю твои примеры) -->
-              <div class="swiper-slide">
-                <a href="#" class="product-card">
-                  <div class="product-card__img">
-                    <img
-                      src="assets/images/menu/person-holding-bouquet-tulips.jpg"
-                      alt="Роза кустовая, 12 шт, Голландия"
-                    />
-                  </div>
-                  <div class="product-card__title">
-                    Роза кустовая, 12 шт, Голландия
-                  </div>
-                  <div class="product-card__price">7 500 ₽</div>
-                </a>
-              </div>
-              <div class="swiper-slide">
-                <a href="#" class="product-card">
-                  <div class="product-card__img">
-                    <img
-                      src="assets/images/menu/person-holding-bouquet-tulips.jpg"
-                      alt="Роза Голландская, 150 шт"
-                    />
-                  </div>
-                  <div class="product-card__title">
-                    Роза Голландская, 150 шт
-                  </div>
-                  <div class="product-card__price">12 900 ₽</div>
-                </a>
-              </div>
-              <div class="swiper-slide">
-                <a href="#" class="product-card">
-                  <div class="product-card__img">
-                    <img
-                      src="assets/images/menu/person-holding-bouquet-tulips.jpg"
-                      alt="Роза пионовидная, кустовая, 50 шт"
-                    />
-                  </div>
-                  <div class="product-card__title">
-                    Роза пионовидная, кустовая, 50 шт
-                  </div>
-                  <div class="product-card__price">9 600 ₽</div>
-                </a>
-              </div>
-              <div class="swiper-slide">
-                <a href="#" class="product-card">
-                  <div class="product-card__img">
-                    <img
-                      src="assets/images/menu/person-holding-bouquet-tulips.jpg"
-                      alt="Хризантемы белые, 3 шт"
-                    />
-                  </div>
-                  <div class="product-card__title">Хризантемы белые, 3 шт</div>
-                  <div class="product-card__price">900 ₽</div>
-                </a>
-              </div>
-            </div>
+            <div class="swiper-wrapper"><!-- js --></div>
           </div>
         </div>
       </section>
     </main>
-
+    <button id="to-top" class="to-top" type="button" aria-label="Наверх">
+      <!-- иконка-стрелка -->
+      <img src="assets/images/icons/arrowLeft.svg" alt="" />
+    </button>
     <!-- footer -->
     <div id="footer-placeholder"></div>
 
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script src="assets/libs/swiper/swiper-bundle.min.js"></script>
     <script src="assets/js/main.js"></script>
+    <script src="assets/js/cart.js"></script>
+    <script>
+      (function () {
+        const orderBtn = document.querySelector(".btn.btn--primary");
+        if (!orderBtn) return;
+
+        // парсер цены вида "5 000 ₽" -> 5000
+        function parsePrice(s) {
+          return (
+            Number(
+              String(s || "")
+                .replace(/\u00A0|&nbsp;|₽|\s/g, "")
+                .replace(",", ".")
+            ) || 0
+          );
+        }
+
+        // собираем объект товара со страницы
+        function buildItemFromPage() {
+          const title =
+            document.querySelector(".product__title")?.textContent.trim() ||
+            "Товар";
+          const price = parsePrice(
+            document.querySelector(".product__price")?.textContent || "0"
+          );
+          const img =
+            document.getElementById("product-main")?.getAttribute("src") || "";
+          const href = location.pathname + location.search;
+          const sku = new URLSearchParams(location.search).get("sku");
+          const excerpt =
+            document.querySelector(".product__desc")?.textContent.trim() || "";
+
+          // стабильный id: предпочитаем ?sku=, иначе из заголовка
+          const id =
+            sku ||
+            "product-" +
+              btoa(unescape(encodeURIComponent(title)))
+                .replace(/=+$/, "")
+                .slice(0, 12);
+
+          return { id, title, price, img, href, excerpt };
+        }
+
+        // создаём/получаем скрытую карточку с кнопкой data-add-to-cart
+        function ensureShadowCard() {
+          let card = document.getElementById("product-shadow-card");
+          if (!card) {
+            card = document.createElement("a");
+            card.id = "product-shadow-card";
+            card.className = "product-card";
+            card.href = "#";
+            card.style.display = "none";
+            card.innerHTML = '<button type="button" data-add-to-cart></button>';
+            document.body.appendChild(card);
+          }
+          return card;
+        }
+
+        orderBtn.addEventListener("click", function (e) {
+          e.preventDefault();
+
+          const item = buildItemFromPage();
+          const card = ensureShadowCard();
+          card.setAttribute("data-product", JSON.stringify(item));
+
+          // триггерим общий обработчик добавления в корзину
+          const btn = card.querySelector("[data-add-to-cart]");
+          btn?.click();
+
+          // визуальный отклик на самой кнопке «Заказать»
+          const prev = orderBtn.innerHTML;
+          orderBtn.classList.add("is-added");
+          orderBtn.innerHTML = "Добавлено&nbsp;✓";
+          orderBtn.style.transform = "scale(0.98)";
+          setTimeout(() => (orderBtn.style.transform = ""), 120);
+          setTimeout(() => {
+            orderBtn.classList.remove("is-added");
+            orderBtn.innerHTML = prev;
+          }, 1200);
+        });
+      })();
+    </script>
+
+    <script>
+      (function () {
+        const box = document.querySelector(".product__photo");
+        let main = document.getElementById("product-main");
+        const thumbsWrap = document.getElementById("product-thumbs");
+
+        if (!box || !thumbsWrap) return;
+
+        // безопасная установка главного изображения (c предзагрузкой и фолбэком)
+        function setMainImage(url, alt) {
+          if (!url) return;
+
+          // если главного <img> нет — создадим
+          if (!main) {
+            main = document.createElement("img");
+            main.id = "product-main";
+            main.alt = alt || "";
+            main.decoding = "async";
+            main.loading = "eager";
+            box.classList.remove("is-empty");
+            box.innerHTML = "";
+            box.appendChild(main);
+          }
+
+          const probe = new Image();
+          probe.onload = () => {
+            box.classList.remove("is-empty");
+            main.src = url;
+            if (alt) main.alt = alt;
+          };
+          probe.onerror = () => {
+            // если картинка битая — показываем плейсхолдер
+            box.classList.add("is-empty");
+            if (main) {
+              main.remove();
+              main = null;
+            }
+          };
+          probe.src = url;
+        }
+
+        // делегируем клики на список миниатюр
+        thumbsWrap.addEventListener("click", (e) => {
+          const btn = e.target.closest(".thumb");
+          if (!btn) return;
+
+          e.preventDefault();
+
+          const imgEl = btn.querySelector("img");
+          const full = btn.dataset.full || imgEl?.getAttribute("src");
+          const alt = imgEl?.getAttribute("alt") || "";
+
+          // активное состояние
+          thumbsWrap
+            .querySelectorAll(".thumb.is-active")
+            .forEach((t) => t.classList.remove("is-active"));
+          btn.classList.add("is-active");
+
+          setMainImage(full, alt);
+        });
+
+        // синхронизируем active при загрузке (если main уже есть)
+        if (main && main.src) {
+          const curr = Array.from(thumbsWrap.querySelectorAll(".thumb")).find(
+            (t) => (t.dataset.full || t.querySelector("img")?.src) === main.src
+          );
+          if (curr) {
+            thumbsWrap
+              .querySelectorAll(".thumb.is-active")
+              .forEach((t) => t.classList.remove("is-active"));
+            curr.classList.add("is-active");
+          }
+        }
+      })();
+    </script>
   </body>
 </html>
