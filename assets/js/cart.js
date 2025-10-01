@@ -154,18 +154,60 @@
   }
 
   // ---------- open/close ----------
+  // ---- unified bottom-sheet open/close + динамическая высота ----
+  function setCartSheetHeights() {
+    const sheet = document.querySelector("#cart-modal .cart__sheet");
+    const scroll = document.querySelector("#cart-modal .cart__scroll");
+    if (!sheet || !scroll) return;
+
+    const vh =
+      Math.min(window.innerHeight || 0, screen.height || 0) ||
+      window.innerHeight;
+    // целевая высота панели (как у меню): не выше 560px на невысоких экранах, но умно растём
+    const H = Math.min(Math.max(vh - 80, 360), 720); // подгони при желании
+    sheet.style.setProperty("--cart-sheet-h", H + "px");
+
+    // внутренний скролл — минус отступы шапки/кнопки
+    // паддинги/заголовок/кнопка закрытия ≈ 96px «съедают» высоту
+    const innerMax = H - 96;
+    scroll.style.maxHeight = Math.max(innerMax, 220) + "px";
+  }
+
   function openCart() {
     const modal = getModal();
     if (!modal) return;
-    renderCart();
+
+    // подготовим размеры ДО включения анимации
+    setCartSheetHeights();
+
+    // делаем видимым (без display:none => не рвём анимацию)
+    modal.classList.add("is-mounted"); // вспомогательный флаг (см. CSS)
+    // один кадр на раскладку
+    void modal.offsetWidth;
     modal.classList.add("is-open");
+
     document.documentElement.classList.add("no-scroll");
+    window.addEventListener("resize", setCartSheetHeights, { passive: true });
+
+    renderCart();
   }
+
   function closeCart() {
     const modal = getModal();
     if (!modal) return;
+
     modal.classList.remove("is-open");
     document.documentElement.classList.remove("no-scroll");
+    window.removeEventListener("resize", setCartSheetHeights);
+
+    // когда анимация закончится — снимем «mounted», чтобы не ловить фокус табом
+    const onEnd = (e) => {
+      if (e.target.matches(".cart__sheet")) {
+        modal.classList.remove("is-mounted");
+        modal.removeEventListener("transitionend", onEnd);
+      }
+    };
+    modal.addEventListener("transitionend", onEnd);
   }
 
   // ---------- rendering from LS ----------
@@ -189,7 +231,9 @@
         <div>
           <h4 class="cart__name">${row.title || "Товар"}</h4>
           ${row.excerpt ? `<p class="cart__meta">${row.excerpt}</p>` : ""}
-          <div class="cart__ctrls">
+
+        </div>
+                 <div class="cart__ctrls">
           <div>
             <div class="qty" data-id="${row.id}">
               <button class="qty__btn" data-act="dec" aria-label="Минус">−</button>
@@ -202,8 +246,6 @@
             </div>
              <div class="cart__price">${money(line)}</div>
           </div>
-        </div>
-       
       `;
       listEl.appendChild(li);
     });
@@ -606,12 +648,6 @@
           0
         ),
       };
-
-      // простая валидация
-      if (!order.customer.phone && !order.recipient.phone) {
-        alert("Укажите телефон заказчика или получателя.");
-        return;
-      }
 
       // UI: блокируем кнопку и имитируем отправку
       const btn = m.querySelector("#cart-submit");

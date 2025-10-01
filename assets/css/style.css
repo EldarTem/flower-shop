@@ -1718,7 +1718,7 @@ ul.social__list li.social__item {
   position: fixed;
   left: 0;
   width: 100%;
-  top: 175px;
+  top: 100px;
   /* высоту задаём JS при открытии => панель не двигается при аккордеоне */
   background: #fff;
   color: #111;

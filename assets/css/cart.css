@@ -8,13 +8,19 @@
   position: fixed;
   inset: 0;
   z-index: 1300;
-  display: none;
+  /* всегда в потоке, но невидим пока не открыт */
+  visibility: hidden;
+  pointer-events: none;
   opacity: 0;
-  transition: opacity 0.24s ease;
+  transition: opacity 0.32s ease;
 }
+.cart.is-mounted {
+  visibility: visible; /* участвует в раскладке перед стартом анимации */
+}
+/* открытое состояние */
 .cart.is-open {
-  display: block;
   opacity: 1;
+  pointer-events: auto;
 }
 .cart__backdrop {
   position: absolute;
@@ -29,28 +35,30 @@
 
 /* Белый лист */
 .cart__sheet {
-  position: absolute;
+  position: fixed;
   left: 50%;
-  top: 50%;
-  box-sizing: border-box;
-  max-width: 980px;
+  bottom: 0;
+  transform: translate(-50%, 100%); /* из-под экрана */
   width: min(980px, 92vw);
-  max-height: 86vh;
+  /* высоту считаем в JS — сюда пробрасываем переменную */
+  height: var(--cart-sheet-h, calc(100svh - 80px));
+  max-height: var(--cart-sheet-h, calc(100svh - 80px));
+
   background: #fff;
   color: #111;
-  border-radius: 16px;
+  border-radius: 20px 20px 0 0;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
   display: flex;
   flex-direction: column;
   overflow: hidden;
   padding: 28px 28px 22px;
-  transform: translate(-50%, calc(-50% + 24px));
-  opacity: 0;
-  transition: transform 0.36s cubic-bezier(0.22, 0.9, 0.22, 1),
-    opacity 0.36s ease;
+
+  /* та же кривая, что у мобильного меню */
+  transition: transform 0.6s cubic-bezier(0.22, 0.9, 0.22, 1), opacity 0.6s ease;
+  will-change: transform;
 }
 .cart.is-open .cart__sheet {
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, 0); /* выезжает вверх */
   opacity: 1;
 }
 
@@ -379,49 +387,57 @@
   gap: 14px;
   margin-top: 18px;
 }
-/* Прячем поля получателя — оставляем только name/phone */
-.cart__form .cart__subtitle,
-.cart__form [name="rname"],
-.cart__form [name="rphone"],
-.cart__form .cart__row,
-.cart__form select[name="city"],
-.cart__form textarea[name="addr"] {
-  display: none !important;
+.btn-container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
 }
-
 /* Кнопка оформить — в потоке */
 .cart__submit {
-  position: static;
   transform: none;
-  display: inline-flex;
-  padding: 14px 26px;
+  padding: 24px 48px;
   border-radius: 999px;
   background: #000;
   color: #fff;
   border: 1px solid #000;
   font-weight: 700;
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.25);
   cursor: pointer;
   justify-self: start; /* из поздней версии */
   margin: 18px auto 6px; /* из ранней версии */
   margin-top: 12px; /* поздняя версия переопределяет верхний отступ */
+  font-size: 24px;
 }
-
+@media (prefers-reduced-motion: reduce) {
+  .cart,
+  .cart__backdrop,
+  .cart__sheet {
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+  }
+}
 /* Мобильный bottom-sheet (выезжает снизу) */
 @media (max-width: 780px) {
   .cart__sheet {
+    position: fixed;
     left: 0;
-    right: 0;
-    bottom: 0;
-    top: auto;
     width: 100%;
-    max-height: calc(100vh - 80px);
-    border-radius: 20px 20px 0 0;
-    padding: 22px 16px 18px;
-    transform: translateY(24px);
+    top: 100px;
+    padding: 20px 13px 13px 13px;
+    background: #fff;
+    color: #111;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+    z-index: 1201;
+    overflow: hidden;
+
+    transform: translateY(100%);
+    opacity: 0;
+    transition: transform 0.6s cubic-bezier(0.22, 0.9, 0.22, 1),
+      opacity 0.6s ease;
   }
   .cart.is-open .cart__sheet {
-    transform: translateY(0);
+    transform: translateY(0); /* выезжает вверх */
+    opacity: 1;
   }
 
   .cart__title {
@@ -484,9 +500,10 @@
   .cart__section-title,
   .cart__section-title--total {
     text-align: left;
+    font-size: 28px;
   }
   .cart__section-title--total #cart-total {
-    font-size: 34px;
+    font-size: 28px;
   }
   .cart__submit {
     width: 100%;
@@ -625,9 +642,7 @@
   margin: 18px 0 8px;
 }
 .cart__upsell .cart__section-title {
-  font-size: 44px;
   text-align: center;
-  margin: 8px 0 18px;
 }
 .upsell__grid {
   display: grid;
@@ -647,6 +662,9 @@
 @media (max-width: 480px) {
   .upsell__grid {
     grid-template-columns: 1fr;
+  }
+  .upsell-card {
+    padding: 8px 0 !important;
   }
 }
 .upsell-card {
@@ -695,4 +713,43 @@
 #cart-submit.is-loading {
   opacity: 0.8;
   pointer-events: none;
+}
+@media (max-width: 480px) {
+  .cart__title {
+    font-size: 24px;
+  }
+  .cart__name {
+    font-size: 18px;
+  }
+  .cart__price {
+    font-size: 20px;
+  }
+  .cart__pay--cols {
+    margin: 0;
+  }
+  .cart-pay_block--sale {
+    flex-direction: column;
+    gap: 20px;
+  }
+  .cart__input,
+  .cart__input--lg {
+    font-size: 16px;
+    padding: 12px 12px;
+  }
+  .chk.chk--lg {
+    font-size: 18px;
+  }
+  .chk.chk--lg input {
+    width: 20px;
+    height: 20px;
+  }
+  .cart__total strong {
+    font-size: 24px;
+  }
+  .cart__submit {
+    width: 100%;
+    font-size: 18px;
+    padding: 16px;
+    margin-top: 16px;
+  }
 }
