@@ -752,7 +752,9 @@
   .product-card--upsell .product-card__price {
     padding: 8px 14px;
     font-size: 15px;
-    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.22);
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0);
+    color: #fff;
+    background-color: #000;
   }
 }
 
