@@ -196,9 +196,6 @@ body {
 }
 
 @media (max-width: 600px) {
-  .seg {
-    grid-template-columns: 1fr 1fr;
-  } /* компактные сегменты */
   .seg--wrap {
     grid-template-columns: 1fr 1fr;
   }

@@ -3,6 +3,15 @@
    ========================= */
 
 /* ---------- Header ---------- */
+.site-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  background: #000; /* Фон, соответствующий вашему дизайну */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Опционально: тень для визуального отделения */
+}
 .site-header__brand {
   text-align: center;
 }
@@ -1554,7 +1563,7 @@ ul.social__list li.social__item {
 }
 @media (max-width: 600px) {
   .subs-nav {
-    padding: 4px;
+    padding: 0;
   }
   .subs-nav .chip {
     height: 46px;
@@ -1575,6 +1584,7 @@ ul.social__list li.social__item {
   }
   .main-nav {
     padding-block: var(--space-4);
+    padding-left: var(--space-2);
   }
   .main-nav__bar {
     flex-direction: row-reverse;
@@ -1761,6 +1771,7 @@ ul.social__list li.social__item {
   font-size: 22px;
   text-transform: uppercase;
   color: #111;
+  border-bottom: 1px solid #eee;
 }
 .mnav__social {
   display: flex;

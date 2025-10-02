@@ -40,6 +40,18 @@ document.addEventListener("DOMContentLoaded", async () => {
   initMegaMenu?.();
   initMobileNav?.(); // если используешь
   initBackToTop();
+
+  function setHeaderPadding() {
+    const header = document.querySelector(".site-header");
+    const headerHeight = header.offsetHeight;
+    document.body.style.paddingTop = `${headerHeight}px`;
+  }
+
+  // Устанавливаем отступ при загрузке страницы
+  setHeaderPadding();
+
+  // Пересчитываем при изменении размера окна
+  window.addEventListener("resize", setHeaderPadding);
 });
 
 // --- Вставка частичных шаблонов ---
@@ -374,7 +386,7 @@ function initMobileNav() {
       Math.min(window.innerHeight || 0, screen.height || 0) ||
       window.innerHeight;
     // целевая высота панели (не выше 560px, и с запасом от краёв)
-    const H = Math.min(560, Math.max(360, vh - 80));
+    const H = Math.min(580, Math.max(360, vh - 80));
     sheet.style.height = H + "px";
     // запас ~60px под кнопки/паддинги/кроссбраузер
     content.style.maxHeight = H - 60 + "px";
@@ -508,10 +520,6 @@ function buildMobileNavFromData(cfg) {
     a.textContent = s.label || "";
     cont.appendChild(a);
   });
-
-  const hr = document.createElement("hr");
-  hr.className = "mnav__divider";
-  cont.appendChild(hr);
 
   const social = document.createElement("div");
   social.className = "mnav__social";

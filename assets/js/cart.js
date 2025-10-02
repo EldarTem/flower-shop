@@ -1,7 +1,3 @@
-/* ==============================
-   Cart (unified, full items)
-   ============================== */
-
 (() => {
   const CART_KEY = "cart";
 
@@ -21,7 +17,6 @@
   const fmtPriceNumber = (val) => {
     if (typeof val === "number" && isFinite(val)) return val;
     if (typeof val === "string") {
-      // выкинем пробелы, &nbsp; и знак ₽
       const num = val.replace(/\u00A0|&nbsp;|₽|\s/g, "").replace(",", ".");
       const n = Number(num);
       if (isFinite(n)) return n;
@@ -29,7 +24,7 @@
     return 0;
   };
 
-  // ---------- storage API (полные строки) ----------
+  // ---------- storage API ----------
   function getCart() {
     const raw = readLS(CART_KEY, []);
     return Array.isArray(raw)
@@ -54,7 +49,6 @@
     const idx = cart.findIndex((r) => r.id === id);
     if (idx >= 0) {
       cart[idx].qty += inc;
-      // Обновим данные товара (на случай, если изменились имя/цена/картинка)
       cart[idx].title = item.title ?? cart[idx].title;
       cart[idx].price = fmtPriceNumber(item.price ?? cart[idx].price);
       cart[idx].img = item.img ?? cart[idx].img;
@@ -122,7 +116,7 @@
     ind.textContent = count > 0 ? String(count) : "";
   }
 
-  // ---------- lazy refs (важно при подгрузке partial) ----------
+  // ---------- lazy refs ----------
   function getModal() {
     return document.getElementById("cart-modal");
   }
@@ -136,25 +130,22 @@
     return getModal()?.querySelector("#cart-upsell");
   }
 
-  // единоразовая привязка внутренних слушателей модалки
+  // ---------- modal bindings ----------
   function bindCartModalOnce() {
     const modal = getModal();
     if (!modal || modal.dataset.bound) return;
     modal.dataset.bound = "1";
 
-    // закрыть по клику на фон/крестик
     modal.addEventListener("click", (e) => {
       if (e.target.matches("[data-cart-close], .cart__backdrop")) closeCart();
     });
 
-    // закрыть по Esc
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape") closeCart();
     });
   }
 
   // ---------- open/close ----------
-  // ---- unified bottom-sheet open/close + динамическая высота ----
   function setCartSheetHeights() {
     const sheet = document.querySelector("#cart-modal .cart__sheet");
     const scroll = document.querySelector("#cart-modal .cart__scroll");
@@ -163,12 +154,9 @@
     const vh =
       Math.min(window.innerHeight || 0, screen.height || 0) ||
       window.innerHeight;
-    // целевая высота панели (как у меню): не выше 560px на невысоких экранах, но умно растём
-    const H = Math.min(Math.max(vh - 80, 360), 720); // подгони при желании
+    const H = Math.min(Math.max(vh - 80, 360), 720);
     sheet.style.setProperty("--cart-sheet-h", H + "px");
 
-    // внутренний скролл — минус отступы шапки/кнопки
-    // паддинги/заголовок/кнопка закрытия ≈ 96px «съедают» высоту
     const innerMax = H - 96;
     scroll.style.maxHeight = Math.max(innerMax, 220) + "px";
   }
@@ -177,12 +165,8 @@
     const modal = getModal();
     if (!modal) return;
 
-    // подготовим размеры ДО включения анимации
     setCartSheetHeights();
-
-    // делаем видимым (без display:none => не рвём анимацию)
-    modal.classList.add("is-mounted"); // вспомогательный флаг (см. CSS)
-    // один кадр на раскладку
+    modal.classList.add("is-mounted");
     void modal.offsetWidth;
     modal.classList.add("is-open");
 
@@ -200,7 +184,6 @@
     document.documentElement.classList.remove("no-scroll");
     window.removeEventListener("resize", setCartSheetHeights);
 
-    // когда анимация закончится — снимем «mounted», чтобы не ловить фокус табом
     const onEnd = (e) => {
       if (e.target.matches(".cart__sheet")) {
         modal.classList.remove("is-mounted");
@@ -231,9 +214,8 @@
         <div>
           <h4 class="cart__name">${row.title || "Товар"}</h4>
           ${row.excerpt ? `<p class="cart__meta">${row.excerpt}</p>` : ""}
-
         </div>
-                 <div class="cart__ctrls">
+        <div class="cart__ctrls">
           <div>
             <div class="qty" data-id="${row.id}">
               <button class="qty__btn" data-act="dec" aria-label="Минус">−</button>
@@ -243,9 +225,9 @@
             <button class="cart__remove" data-remove="${
               row.id
             }" type="button">Удалить</button>
-            </div>
-             <div class="cart__price">${money(line)}</div>
           </div>
+          <div class="cart__price">${money(line)}</div>
+        </div>
       `;
       listEl.appendChild(li);
     });
@@ -254,7 +236,6 @@
     renderUpsell();
   }
 
-  // (опционально) апселл
   // === UPSell (статичный список) ===
   const UPS_DATA = [
     {
@@ -291,23 +272,39 @@
     },
   ];
 
-  // создаём секцию при необходимости и рендерим карточки
+  // Рендеринг апселл-карточек
   function renderUpsell() {
+    console.log("renderUpsell called");
     const modal = getModal?.() || document.getElementById("cart-modal");
-    if (!modal) return;
+    if (!modal) {
+      console.log("Modal not found");
+      return;
+    }
 
-    // секция
+    // Создаем секцию, если отсутствует
     let host = modal.querySelector("#cart-upsell");
     if (!host) {
+      console.log("Creating upsell section");
       const scroll = modal.querySelector(".cart__scroll") || modal;
       host = document.createElement("section");
       host.id = "cart-upsell";
       host.className = "cart__upsell";
       host.setAttribute("aria-label", "Дополнить заказ");
       host.innerHTML = `
-      <h4 class="cart__section-title">Дополнить заказ</h4>
-      <div class="upsell__grid"></div>
-    `;
+        <h4 class="cart__section-title">Дополнить заказ</h4>
+        <div class="upsell__grid"></div>
+        <div class="upsell__slider-wrap">
+          <button class="upsell-nav upsell-prev" aria-label="Предыдущие дополнения">
+            <img src="assets/images/icons/arrowLeft.svg" alt="" />
+          </button>
+          <button class="upsell-nav upsell-next" aria-label="Следующие дополнения">
+            <img src="assets/images/icons/arrowRight.svg" alt="" />
+          </button>
+          <div class="swiper upsell-swiper">
+            <div class="swiper-wrapper"></div>
+          </div>
+        </div>
+      `;
       const list = modal.querySelector("#cart-list");
       (list?.parentNode === scroll ? list : scroll).insertAdjacentElement(
         "afterend",
@@ -316,54 +313,122 @@
     }
 
     const grid = host.querySelector(".upsell__grid");
-    if (!grid) return;
+    const swiperWrapper = host.querySelector(".upsell-swiper .swiper-wrapper");
+    if (!grid || !swiperWrapper) {
+      console.log("Grid or swiper wrapper not found");
+      return;
+    }
 
+    // Очищаем оба контейнера
     grid.innerHTML = "";
-    UPS_DATA.forEach((p) => {
+    swiperWrapper.innerHTML = "";
+    console.log("Cleared grid and swiper wrapper");
+
+    // Рендерим в нужный контейнер
+    const isMobile = window.innerWidth <= 640;
+    const target = isMobile ? swiperWrapper : grid;
+    console.log(`Rendering to ${isMobile ? "swiper-wrapper" : "upsell__grid"}`);
+
+    UPS_DATA.forEach((p, index) => {
       const payload = {
         id: String(p.id),
         title: String(p.title),
         price: Number(p.price) || 0,
         img: String(p.img || ""),
         excerpt: String(p.excerpt || ""),
+        href: String(p.href || ""),
       };
-      const card = document.createElement("div");
-      card.className = "upsell-card";
+      const card = document.createElement("a");
+      card.className = isMobile
+        ? "swiper-slide"
+        : "product-card product-card--slider product-card--upsell";
+      card.href = payload.href;
+      card.setAttribute(
+        "data-product",
+        JSON.stringify(payload).replace(/'/g, "&#39;")
+      );
       card.innerHTML = `
-      <div class="upsell-card__img"><img src="${payload.img}" alt="${
-        payload.title
-      }"></div>
-      <div class="upsell-card__title">${payload.title}</div>
-      <button class="upsell-card__btn" type="button" data-add='${JSON.stringify(
-        payload
-      ).replace(/'/g, "&#39;")}'>
-        ${money(payload.price)}
-      </button>
-    `;
-      grid.appendChild(card);
+        <div class="product-card product-card--slider product-card--upsell">
+          <div class="product-card__img">
+            <img src="${payload.img}" alt="${payload.title}">
+          </div>
+          <div class="product-card__title">${payload.title}</div>
+          <button class="product-card__price" type="button" data-add-to-cart>
+            ${money(payload.price)}
+          </button>
+        </div>
+      `;
+      target.appendChild(card);
+      console.log(`Rendered card ${index + 1}: ${payload.title}`);
     });
 
-    host.style.display = ""; // всегда показываем
+    host.style.display = "";
+    console.log("Upsell section displayed");
+
+    setTimeout(initUpsellSlider, 0);
   }
-  // клик по кнопке «цена» в апселле (внутри модалки)
+
+  // Инициализация Swiper
+  let upsellSwiper = null;
+  function initUpsellSlider() {
+    console.log("initUpsellSlider called");
+    if (upsellSwiper) {
+      upsellSwiper.destroy(true, true);
+      upsellSwiper = null;
+      console.log("Destroyed previous Swiper instance");
+    }
+
+    if (window.innerWidth <= 640) {
+      const swiperWrapper = document.querySelector(
+        ".upsell-swiper .swiper-wrapper"
+      );
+      if (swiperWrapper && swiperWrapper.children.length > 0) {
+        console.log(
+          `Swiper initializing with ${swiperWrapper.children.length} slides`
+        );
+        upsellSwiper = new Swiper(".upsell-swiper", {
+          slidesPerView: 2,
+          spaceBetween: 12,
+          navigation: {
+            nextEl: ".upsell-nav.upsell-next",
+            prevEl: ".upsell-nav.upsell-prev",
+          },
+        });
+        console.log("Swiper initialized");
+      } else {
+        console.log(
+          "No slides found in swiper-wrapper, skipping Swiper initialization"
+        );
+      }
+    }
+  }
+
+  // Обработчик кликов по кнопке «добавить» в апселле
   document.addEventListener("click", (e) => {
     const modal = document.getElementById("cart-modal");
     if (!modal || !modal.contains(e.target)) return;
-    const btn = e.target.closest("[data-add]");
+    const btn = e.target.closest("[data-add-to-cart]");
     if (!btn) return;
 
+    const card = btn.closest(".product-card");
+    if (!card) return;
+
     try {
-      const item = JSON.parse(btn.getAttribute("data-add") || "{}");
+      const item = JSON.parse(
+        card.closest("[data-product]").getAttribute("data-product") || "{}"
+      );
       if (item && item.id) {
         addItemToCart(item, 1);
         showToast(`«${item.title}» добавлен в корзину`);
-        renderCart?.(); // перерисуем список и сумму
-        updateCartBadge?.();
+        renderCart();
+        updateCartBadge();
       }
-    } catch {}
+    } catch (e) {
+      console.error("Error adding item to cart:", e);
+    }
   });
 
-  // Делегирование кликов ВНУТРИ модалки (qty/удаление/апселл)
+  // Делегирование кликов внутри модалки (qty/удаление)
   document.addEventListener("click", (e) => {
     const modal = getModal();
     if (!modal || !modal.contains(e.target)) return;
@@ -371,7 +436,6 @@
     const dec = e.target.closest('[data-act="dec"]');
     const inc = e.target.closest('[data-act="inc"]');
     const rm = e.target.closest("[data-remove]");
-    const ups = e.target.closest("[data-add]");
 
     if (dec || inc) {
       const wrap = e.target.closest(".qty");
@@ -383,8 +447,6 @@
       removeFromCart(rm.dataset.remove);
       renderCart();
       updateCartBadge();
-    } else if (ups) {
-      // обработка апселла по необходимости
     }
   });
 
@@ -393,9 +455,8 @@
     const card = btn.closest(".product-card");
     if (!card) return null;
 
-    // 1) Пытаемся взять из data-product (правильный путь)
     try {
-      const raw = card.getAttribute("data-product");
+      const raw = card.closest("[data-product]").getAttribute("data-product");
       if (raw) {
         const obj = JSON.parse(raw);
         return {
@@ -408,7 +469,6 @@
       }
     } catch {}
 
-    // 2) Фолбэк: собираем из DOM
     const id =
       new URL(
         card.getAttribute("href") || "",
@@ -427,20 +487,18 @@
     if (document.documentElement.dataset.cartBound) return;
     document.documentElement.dataset.cartBound = "1";
 
-    // Открыть корзину по иконке
     document.addEventListener("click", (e) => {
       const opener = e.target.closest("[data-open-cart]");
-      if (!opener) return;
-      e.preventDefault();
-      openCart();
+      if (opener) {
+        e.preventDefault();
+        openCart();
+      }
     });
 
-    // Добавить в корзину
     document.addEventListener("click", (e) => {
       const btn = e.target.closest("[data-add-to-cart]");
       if (!btn) return;
 
-      // защита от повторной обработки этим же событием
       if (btn.dataset.cartHandled === "1") return;
       btn.dataset.cartHandled = "1";
       setTimeout(() => {
@@ -452,7 +510,6 @@
 
       addItemToCart(item, 1);
 
-      // Визуальный отклик
       const prevHTML = btn.innerHTML;
       btn.classList.add("is-added");
       btn.innerHTML = "Добавлено&nbsp;✓";
@@ -473,38 +530,53 @@
       e.stopImmediatePropagation();
     });
 
-    // держим бэйдж в актуальном состоянии
     document.addEventListener("cart:change", updateCartBadge);
   }
 
   // ---------- init ----------
   function initCartUI() {
+    console.log("initCartUI called");
     bindDelegatedOnce();
-    bindCartModalOnce(); // важно при подгрузке partial
+    bindCartModalOnce();
     updateCartBadge();
+    renderUpsell();
+    initUpsellSlider();
   }
 
   document.addEventListener("DOMContentLoaded", initCartUI);
-  // после includePartials/подключения cart.html
   document.addEventListener("partials:loaded", initCartUI);
   document.addEventListener("cart:mounted", initCartUI);
 
-  // ---- экспорт (по желанию) ----
-  window.Cart = { open: openCart, render: renderCart, badge: updateCartBadge };
+  window.addEventListener(
+    "resize",
+    () => {
+      console.log("Window resized, reinitializing upsell slider");
+      renderUpsell();
+    },
+    { passive: true }
+  );
+
+  // ---- экспорт ----
+  window.Cart = {
+    open: openCart,
+    render: renderCart,
+    badge: updateCartBadge,
+    upsell: renderUpsell,
+  };
 })();
 
-(function mountPickers() {
+// ==== Date/Time pickers ====
+(() => {
   function init() {
     if (!window.flatpickr) return;
 
-    // DATE
     const dateInput = document.querySelector('input[name="delivery_date"]');
     if (dateInput) {
       flatpickr(dateInput, {
         locale: flatpickr.l10ns.ru,
         dateFormat: "d.m.Y",
         minDate: "today",
-        disableMobile: true, // <— ключевой флаг!
+        disableMobile: true,
         onOpen: () =>
           dateInput.closest(".picker-wrap")?.classList.add("is-open"),
         onClose: () =>
@@ -512,7 +584,6 @@
       });
     }
 
-    // TIME
     const timeInput = document.querySelector('input[name="delivery_time"]');
     if (timeInput) {
       flatpickr(timeInput, {
@@ -521,7 +592,7 @@
         time_24hr: true,
         minuteIncrement: 5,
         dateFormat: "H:i",
-        disableMobile: true, // <— тоже важно
+        disableMobile: true,
         onOpen: () =>
           timeInput.closest(".picker-wrap")?.classList.add("is-open"),
         onClose: () =>
@@ -530,21 +601,17 @@
     }
   }
 
-  // когда страница готова
   document.addEventListener("DOMContentLoaded", init);
-  // когда partials и модалка подгружены
   document.addEventListener("cart:mounted", init);
   document.addEventListener("partials:loaded", init);
 })();
 
-// open на focus/click
-// === Стрелка у select "Город доставки" ===
+// ==== Select "Город доставки" ===
 (() => {
   const WRAP = ".cart__select-wrap";
   const SEL = ".cart__select";
   const OPEN = "is-open";
 
-  // ОТКРЫТЬ: при фокусе или mousedown по самому select
   document.addEventListener("focusin", (e) => {
     if (e.target.matches(SEL)) {
       e.target.closest(WRAP)?.classList.add(OPEN);
@@ -555,7 +622,6 @@
     if (sel) sel.closest(WRAP)?.classList.add(OPEN);
   });
 
-  // ЗАКРЫТЬ: когда значение выбрано (change) или фокус ушёл (blur)
   document.addEventListener(
     "change",
     (e) => {
@@ -564,7 +630,7 @@
       }
     },
     true
-  ); // capture — надёжнее в Safari
+  );
   document.addEventListener(
     "blur",
     (e) => {
@@ -575,7 +641,6 @@
     true
   );
 
-  // ЗАКРЫТЬ: клик-вне и Esc
   document.addEventListener("mousedown", (e) => {
     if (!e.target.closest(WRAP)) {
       document
@@ -592,7 +657,7 @@
   });
 })();
 
-// ==== Fake checkout: отправка + редирект на success ====
+// ==== Fake checkout ===
 (() => {
   const CART_KEY = "cart";
   let bound = false;
@@ -611,7 +676,6 @@
         return;
       }
 
-      // собираем форму
       const m = document.getElementById("cart-modal");
       const getVal = (sel) => m.querySelector(sel)?.value?.trim() || "";
       const getRadio = (name) =>
@@ -649,7 +713,6 @@
         ),
       };
 
-      // UI: блокируем кнопку и имитируем отправку
       const btn = m.querySelector("#cart-submit");
       const prev = btn.innerHTML;
       btn.disabled = true;
@@ -657,21 +720,14 @@
       btn.innerHTML = "Отправляем…";
 
       try {
-        // имитация сети (1.2 сек)
         await new Promise((r) => setTimeout(r, 1200));
-
-        // сохраним «последний заказ» — можно показать на success
         try {
           localStorage.setItem("last_order", JSON.stringify(order));
         } catch {}
-
-        // очистим корзину
         try {
           localStorage.setItem(CART_KEY, "[]");
           document.dispatchEvent(new CustomEvent("cart:change"));
         } catch {}
-
-        // редирект
         const q = new URLSearchParams({ order: order.id }).toString();
         location.href = "/success.html?" + q;
       } catch (e) {
@@ -701,7 +757,6 @@
     );
   }
 
-  // привязка в нужные моменты жизненного цикла
   document.addEventListener("DOMContentLoaded", bindOnce);
   document.addEventListener("partials:loaded", bindOnce);
   document.addEventListener("cart:mounted", bindOnce);

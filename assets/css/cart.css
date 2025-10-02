@@ -162,7 +162,6 @@
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  background: #f7f7f7;
   border-radius: 999px;
   padding: 6px 10px;
 }
@@ -271,6 +270,7 @@
   background: #fff;
   outline: none;
   cursor: pointer;
+  border-radius: 50px;
 }
 .cart__pay .chk input[type="radio"]::after {
   content: "";
@@ -278,6 +278,7 @@
   inset: 7px;
   background: transparent;
   transition: background-color 0.15s ease;
+  border-radius: 50px;
 }
 .cart__pay .chk input[type="radio"]:checked::after {
   background: #111;
@@ -638,76 +639,137 @@
 }
 
 /* ===== UPSell внутри корзины ===== */
+/* ===== CART UPSELL ===== */
 .cart__upsell {
-  margin: 18px 0 8px;
+  margin-block: 24px;
 }
-.cart__upsell .cart__section-title {
+
+.cart__section-title {
   text-align: center;
+  font-size: 24px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 18px;
 }
-.upsell__grid {
-  display: grid;
-  gap: 20px;
-  grid-template-columns: repeat(4, 1fr);
+
+.upsell-swiper {
+  padding: 0 4px;
+  overflow: hidden; /* Скрываем лишние слайды */
 }
-@media (max-width: 1100px) {
-  .upsell__grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
+
+.upsell-swiper .swiper-wrapper {
+  display: flex;
 }
-@media (max-width: 780px) {
-  .upsell__grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
+
+.upsell-swiper .swiper-slide {
+  height: auto;
+  width: calc(50% - 6px); /* Две карточки с учетом spaceBetween: 12px */
+  opacity: 1;
 }
-@media (max-width: 480px) {
-  .upsell__grid {
-    grid-template-columns: 1fr;
-  }
-  .upsell-card {
-    padding: 8px 0 !important;
-  }
-}
-.upsell-card {
-  display: grid;
-  grid-template-rows: auto auto auto;
-  gap: 10px;
-  border-radius: 18px;
-  padding: 8px;
-}
-.upsell-card__img {
-  border-radius: 18px;
-  overflow: hidden;
-  background: #f3f3f3;
-  aspect-ratio: 1 / 1;
-}
-.upsell-card__img img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-.upsell-card__title {
-  font-size: 18px;
-  line-height: 1.35;
-  color: #111;
-}
-.upsell-card__btn {
-  justify-self: start;
-  margin-top: 2px;
-  padding: 10px 18px;
-  border-radius: 999px;
-  background: #000;
-  color: #fff;
-  border: 1px solid #000;
-  font-weight: 700;
+
+.upsell-nav {
+  position: absolute;
+  top: calc(var(--pc-img-h) / 2);
+  transform: translateY(-50%);
+  z-index: 5;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+  border: none;
+  cursor: pointer;
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  cursor: pointer;
-  user-select: none;
+  justify-content: center;
 }
-.upsell-card__btn:active {
-  transform: translateY(1px);
+
+.upsell-prev {
+  left: -55px;
+}
+
+.upsell-next {
+  right: -55px;
+}
+
+.upsell-nav img {
+  width: 20px;
+  height: 20px;
+  display: block;
+}
+
+.upsell__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 20px;
+}
+
+/* Мобильная версия: слайдер */
+@media (max-width: 640px) {
+  .cart__upsell {
+    margin-block: 16px;
+  }
+
+  .cart__section-title {
+    font-size: 20px;
+    margin-bottom: 14px;
+  }
+
+  .upsell__grid {
+    display: none;
+  }
+
+  .upsell__slider-wrap {
+    display: block;
+  }
+
+  .upsell-nav {
+    display: none;
+  }
+
+  .upsell-swiper {
+    padding: 0;
+    overflow: hidden; /* Гарантируем скрытие лишних слайдов */
+  }
+
+  .upsell-swiper .swiper-slide {
+    width: calc(50% - 6px); /* Две карточки на экране */
+  }
+
+  .product-card--upsell .product-card__img {
+    aspect-ratio: 3 / 4;
+    border: #fff 2px solid;
+    border-radius: 10px;
+  }
+
+  .product-card--upsell .product-card__title {
+    font-size: 16px;
+    line-height: 1.25;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+  }
+
+  .product-card--upsell .product-card__price {
+    padding: 8px 14px;
+    font-size: 15px;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.22);
+  }
+}
+
+@media (max-width: 1200px) {
+  .upsell-prev {
+    left: -10px;
+  }
+  .upsell-next {
+    right: -10px;
+  }
+}
+
+@media (max-width: 900px) {
+  .upsell-nav {
+    width: 42px;
+    height: 42px;
+  }
 }
 
 #cart-submit.is-loading {

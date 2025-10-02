@@ -2,6 +2,7 @@
 :root {
   --pc-img-h: 380px; /* высота картинки в слайдере/на главной */
   --pc-img-h-catalog: 340px; /* высота в каталоге */
+  --pc-img-h-upsell: 280px; /* высота в корзине (upsell) */
 }
 
 /* База */
@@ -17,28 +18,27 @@
 /* Изображение */
 .product-card__img {
   position: relative;
-  box-sizing: content-box; /* рамка больше не влияет (перенесём её ниже) */
-
+  box-sizing: content-box;
   border-radius: 10px;
   border: #fff 2px solid;
   overflow: hidden;
   height: var(--pc-img-h);
-  min-height: var(--pc-img-h); /* фиксируем высоту "в тиски" */
+  min-height: var(--pc-img-h);
   max-height: var(--pc-img-h);
-  will-change: transform; /* сглаживаем субпиксельные артефакты */
+  will-change: transform;
 }
+
 .product-card__img img {
-  position: absolute; /* чтоб inset работал */
+  position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
-  transform: translateZ(0); /* доп. стабилизация рендера */
+  transform: translateZ(0);
   transition: transform 0.35s ease;
 }
 
-/* Лёгкий zoom на картинку при ховере карточки */
 .product-card:hover .product-card__img img {
   transform: scale(1.03);
 }
@@ -50,17 +50,19 @@
   min-height: calc(1.3em * 2);
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2; /* вендорное — для широкой совместимости */
-  line-clamp: 2; /* стандартное — чтобы убрать предупреждение */
-  overflow: hidden; /* прячем лишнее */
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
   transition: color 0.25s ease;
 }
+
 @supports (line-clamp: 2) {
   .product-card__title {
-    display: block; /* больше не нужен -webkit-box */
-    overflow: clip; /* современный эквивалент скрытия */
+    display: block;
+    overflow: clip;
   }
 }
+
 /* Цена = кнопка */
 .product-card__price {
   margin-top: auto;
@@ -77,34 +79,44 @@
   border: 0;
   cursor: pointer;
 }
+
 .product-card__price:focus-visible {
   outline: 2px solid #000;
   outline-offset: 2px;
 }
 
-/* Каталог — только переопределяем высоту картинки */
+/* Каталог */
 .product-card--catalog .product-card__img {
   height: var(--pc-img-h-catalog);
 }
 
-/* ===== Ховеры для каталога (фон, текст, кнопка) ===== */
 .product-card--catalog {
   border-radius: 12px;
-  padding: 5px 5px 10px 5px; /* чтобы фон был заметен вокруг контента */
+  padding: 5px 5px 10px 5px;
   transition: background-color 0.25s ease, box-shadow 0.25s ease,
     transform 0.15s ease;
 }
+
 .product-card--catalog:hover {
   background-color: #fff;
   box-shadow: 0 6px 24px rgba(0, 0, 0, 0.12);
 }
+
 .product-card--catalog:hover .product-card__title {
-  color: #111; /* при наведении темнее текст */
+  color: #111;
 }
+
 .product-card--catalog:hover .product-card__price {
-  background-color: #000; /* инверсия кнопки */
+  background-color: #000;
   color: #fff;
   box-shadow: 0 8px 28px rgba(0, 0, 0, 0.2);
+}
+
+/* Upsell (корзина) */
+.product-card--upsell .product-card__img {
+  height: var(--pc-img-h-upsell);
+  min-height: var(--pc-img-h-upsell);
+  max-height: var(--pc-img-h-upsell);
 }
 
 /* Чтобы тень карточки не обрезалась сеткой каталога */
@@ -117,36 +129,39 @@
   :root {
     --pc-img-h: 340px;
     --pc-img-h-catalog: 300px;
+    --pc-img-h-upsell: 240px;
   }
 }
+
 @media (max-width: 900px) {
   :root {
     --pc-img-h: 300px;
     --pc-img-h-catalog: 260px;
+    --pc-img-h-upsell: 200px;
   }
 }
+
 @media (max-width: 640px) {
   :root {
-    /* высоты больше не важны — но оставим на всякий */
     --pc-img-h: 210px;
     --pc-img-h-catalog: 220px;
+    --pc-img-h-upsell: 180px; /* Для фиксированной высоты, если aspect-ratio не используется */
   }
 
   .product-card {
     gap: 8px;
   }
 
-  /* ПРОПОРЦИОНАЛЬНЫЕ КАРТИНКИ НА МОБИЛЕ */
   .product-card__img {
-    height: auto; /* вместо фиксированной высоты */
+    height: auto;
     min-height: 0;
     max-height: none;
-    aspect-ratio: 3 / 4; /* выбери 3/4, 4/5 или 1/1 по вкусу */
-    position: relative;
+    aspect-ratio: 3 / 4;
     border-radius: 10px;
   }
-  /* отдельное правило не нужно, но на всякий — гасим каталогные оверрайды */
-  .product-card--catalog .product-card__img {
+
+  .product-card--catalog .product-card__img,
+  .product-card--upsell .product-card__img {
     height: auto;
     min-height: 0;
     max-height: none;
@@ -174,10 +189,127 @@
   }
 }
 
-/* Внешние контейнеры могут переопределять высоту через переменные */
+/* Внешние контейнеры */
 .catalog {
   --pc-img-h-catalog: var(--catalog-img-h);
 }
 .popular {
   --pc-img-h: var(--popular-img-h);
+}
+
+/* ===== CART UPSELL ===== */
+.cart__upsell {
+  margin-block: 24px;
+}
+
+.cart__section-title {
+  text-align: center;
+  font-size: 24px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 18px;
+}
+
+.upsell__slider-wrap {
+  position: relative;
+  display: none;
+}
+
+.upsell-swiper {
+  padding: 0 4px;
+  overflow: visible;
+}
+
+.upsell-swiper .swiper-wrapper {
+  display: flex;
+}
+
+.upsell-swiper .swiper-slide {
+  height: auto;
+  width: 160px; /* Уменьшенная ширина для мобильных */
+  opacity: 1;
+}
+
+.upsell-nav {
+  position: absolute;
+  top: calc(var(--pc-img-h-upsell, 180px) / 2);
+  transform: translateY(-50%);
+  z-index: 5;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.upsell-prev {
+  left: -55px;
+}
+
+.upsell-next {
+  right: -55px;
+}
+
+.upsell-nav img {
+  width: 20px;
+  height: 20px;
+  display: block;
+}
+
+.upsell__grid {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(220px, 1fr)
+  ); /* Уменьшено для меньших карточек */
+  gap: 20px;
+}
+
+/* Мобильная версия */
+@media (max-width: 640px) {
+  .cart__upsell {
+    margin-block: 16px;
+  }
+
+  .cart__section-title {
+    font-size: 20px;
+    margin-bottom: 14px;
+  }
+
+  .upsell__grid {
+    display: none;
+  }
+
+  .upsell__slider-wrap {
+    display: block;
+  }
+
+  .upsell-nav {
+    display: none;
+  }
+
+  .upsell-swiper {
+    padding: 0;
+  }
+}
+
+@media (max-width: 1200px) {
+  .upsell-prev {
+    left: -10px;
+  }
+  .upsell-next {
+    right: -10px;
+  }
+}
+
+@media (max-width: 900px) {
+  .upsell-nav {
+    width: 42px;
+    height: 42px;
+  }
 }
